@@ -1,4 +1,4 @@
-package org.ooad;
+package com.example.ooadprojectcarnerohelsel;
 
 public class Main {
     public static void main(String[] args) {

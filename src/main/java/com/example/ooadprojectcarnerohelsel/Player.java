@@ -1,6 +1,6 @@
-package org.ooad;
+package com.example.ooadprojectcarnerohelsel;
 import javafx.scene.text.Text;
-import org.ooad.Game;
+import com.example.ooadprojectcarnerohelsel.Game;
 
 public class Player {
     private Integer x;
@@ -20,7 +20,7 @@ public class Player {
     }
 
     public void moveSouth() {
-        if (y < Game.ROWS ) {
+        if (y < Game.ROWS - 1) {
             y++;
         }
     }
@@ -32,7 +32,7 @@ public class Player {
     }
 
     public void moveEast() {
-        if (x < Game.COLS ) {
+        if (x < Game.COLS - 1) {
             x++;
         }
     }
@@ -50,8 +50,8 @@ public class Player {
     }
 
     public void centerTextInTile() {
-        name.setTranslateX(x * Game.TILE_SIZE + Game.TILE_SIZE / 2 - name.getLayoutBounds().getWidth() / 2);
-        name.setTranslateY(y * Game.TILE_SIZE + Game.TILE_SIZE / 2 + name.getLayoutBounds().getHeight() / 4);
+        name.setTranslateX(x * Game.TILE_SIZE + Game.TILE_SIZE / 2 - name.getLayoutBounds().getWidth() / 2 + Display.borderOffset);
+        name.setTranslateY(y * Game.TILE_SIZE + Game.TILE_SIZE / 2 + name.getLayoutBounds().getHeight() / 4 + Display.borderOffset);
     }
 
 }

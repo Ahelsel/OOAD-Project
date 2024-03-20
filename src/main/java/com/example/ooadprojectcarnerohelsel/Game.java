@@ -1,4 +1,4 @@
-package org.ooad;
+package com.example.ooadprojectcarnerohelsel;
 
 import javafx.application.Application;
 import javafx.scene.input.KeyEvent;
@@ -11,8 +11,9 @@ public class Game extends Application {
     public static final Integer ROWS = 10;
     public static final Integer COLS = 10;
     public static final Integer TILE_SIZE = 40;
-    public static final Integer WIDTH = COLS * TILE_SIZE;
-    public static final Integer HEIGHT = ROWS * TILE_SIZE;
+    // (4 * TILE_SIZE) gives a 2-tile border around the grid (top, bottom, left, right)
+    public static final Integer WIDTH = COLS * TILE_SIZE + (4 * TILE_SIZE);
+    public static final Integer HEIGHT = ROWS * TILE_SIZE + (4 * TILE_SIZE);
 
     private Player player = new Player(0, 0, new Text("Player"));
     private Display display = new Display(ROWS, COLS, TILE_SIZE);
