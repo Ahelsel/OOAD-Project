@@ -47,6 +47,21 @@ public class Game extends Application {
             case D:
                 player.moveEast();
                 break;
+            case UP:
+                player.moveNorth();
+                break;
+            case DOWN:
+                player.moveSouth();
+                break;
+            case LEFT:
+                player.moveWest();
+                break;
+            case RIGHT:
+                player.moveEast();
+                break;
+            case ESCAPE:
+                System.exit(0);
+                break;
             default:
                 break;
         }
