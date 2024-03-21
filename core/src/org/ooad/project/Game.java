@@ -19,10 +19,10 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class Game extends ApplicationAdapter {
-private Texture dropImage;
+private Texture raindropImage;
 	private Texture bucketImage;
-	private Sound dropSound;
-	private Music rainMusic;
+	private Sound raindropSound;
+	private Music backgroundNoise;
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	private Rectangle bucket;
@@ -32,16 +32,16 @@ private Texture dropImage;
 	@Override
 	public void create() {
 		// load the images for the droplet and the bucket, 64x64 pixels each
-		dropImage = new Texture(Gdx.files.internal("droplet.png"));
+		raindropImage = new Texture(Gdx.files.internal("droplet.png"));
 		bucketImage = new Texture(Gdx.files.internal("bucket.png"));
 
 		// load the drop sound effect and the rain background "music"
-		dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
-		rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
+		raindropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
+		backgroundNoise = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
 
 		// start the playback of the background music immediately
-		rainMusic.setLooping(true);
-		rainMusic.play();
+		backgroundNoise.setLooping(true);
+		backgroundNoise.play();
 
 		// create the camera and the SpriteBatch
 		camera = new OrthographicCamera();
@@ -90,7 +90,7 @@ private Texture dropImage;
 		batch.begin();
 		batch.draw(bucketImage, bucket.x, bucket.y);
 		for(Rectangle raindrop: raindrops) {
-			batch.draw(dropImage, raindrop.x, raindrop.y);
+			batch.draw(raindropImage, raindrop.x, raindrop.y);
 		}
 		batch.end();
 
@@ -119,7 +119,7 @@ private Texture dropImage;
 			raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
 			if(raindrop.y + 64 < 0) iter.remove();
 			if(raindrop.overlaps(bucket)) {
-				dropSound.play();
+				raindropSound.play();
 				iter.remove();
 			}
 		}
@@ -128,10 +128,10 @@ private Texture dropImage;
 	@Override
 	public void dispose() {
 		// dispose of all the native resources
-		dropImage.dispose();
+		raindropImage.dispose();
 		bucketImage.dispose();
-		dropSound.dispose();
-		rainMusic.dispose();
+		raindropSound.dispose();
+		backgroundNoise.dispose();
 		batch.dispose();
 	}
 }
