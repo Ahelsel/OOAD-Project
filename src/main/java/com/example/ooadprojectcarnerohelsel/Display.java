@@ -9,13 +9,11 @@ public class Display {
     private final Integer cols;
     private final Integer tileSize;
 
-    public static Integer borderOffset = null;
 
     public Display(Integer rows, Integer cols, Integer tileSize) {
         this.rows = rows;
         this.cols = cols;
         this.tileSize = tileSize;
-        this.borderOffset = 2 * tileSize;
     }
 
     public void initializeGrid(Pane root) {
@@ -24,19 +22,15 @@ public class Display {
                 Rectangle tile = new Rectangle(tileSize, tileSize);
                 tile.setStroke(Color.BLACK);
                 tile.setFill(Color.WHITE);
-                tile.setX(x * tileSize + borderOffset);
-                tile.setY(y * tileSize + borderOffset);
+                tile.setX(x * tileSize);
+                tile.setY(y * tileSize);
                 root.getChildren().add(tile);
             }
         }
     }
 
-    public void addPlayerToGrid(Pane root, Player player) {
-        root.getChildren().add(player.getName());
-    }
-
     public void updatePlayerPosition(Player player) {
-        player.centerTextInTile();
+        player.centerPlayerModelInTile();
     }
 
 }
