@@ -19,7 +19,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class Game extends ApplicationAdapter {
-private Texture raindropImage;
+	private Texture raindropImage;
 	private Texture bucketImage;
 	private Sound raindropSound;
 	private Music backgroundNoise;
@@ -134,4 +134,15 @@ private Texture raindropImage;
 		backgroundNoise.dispose();
 		batch.dispose();
 	}
+
+	// we need to implement create, render, and dispose methods
+	// in create, load assets and initialize variables
+	//		- load level, textures, characters, sounds, etc.
+	// in render, update the game state and draw everything
+	//		- update positions, check for collisions, etc.
+	// in dispose, dispose of all the native resources
+	// 		- call dispose methods where necessary
+
+
+
 }
