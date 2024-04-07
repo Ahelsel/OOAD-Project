@@ -1,40 +1,12 @@
 # Semester Project - CSCI 4448 Object Oriented Analysis and Design
 
-
 ## Team Members
-Anthony Helsel
-Jesus Carnero
-Rocky Erdenebat
-
+- Anthony Helsel
+- Jesus Carnero
+- Rocky Erdenebat
 
 ## Project Description
-TODO
-
-## Realistic Goals / TODOs
-
-### Fundamental Mechanics
-
-Add a level / scene / gameplay environment:
-    - 
-
-Add a Main character that the user controls:
-    -
-
-Add enemy character(s) that the user can interact/battle with:
-    -
-
-Add a weapon system that the user can use to attack enemies:
-    -
-
-### Visuals / Animation
-TODO for README: Sprite sheet, animations, character design, level design, objects, weapon design
-
-
-## Stretch Goals
-
-### Audio
-TODO: 
-
+This project is a top-down combat/shooter game where the player is tasked with defending a base from the enemies that spawn around it. The base has a health value that will decrease if enemies reach the center of it. The game is over when the health of the HomeBase or Player reaches 0.
 
 ## Project Structure
 The main code for the project is located in the 'core/src' directory.
@@ -98,8 +70,28 @@ Attributes:
 - Boolean: modifier (if the projectile has a special effect) (Stretch Goal)
 - Modifier: modifierType (if the projectile has a special effect) (Stretch Goal)
 
-
 ## Running the Project
 In order to build and test the project in a Desktop environment, you will need to use the LibGDX-provided 'desktop' module.
 To do this, run the 'DesktopLauncher' class located in the 'desktop/src/org/ooad/project' directory.
 
+
+
+## Milestones to be Completed
+
+### Fundamental Mechanics
+TODO
+
+
+### Visuals
+- Create a basic level with a HomeBase and Player
+- Add a Player sprite with movement (change Sprite based on direction)
+- Add an Enemy sprite with movement (change Sprite based on direction)
+- Add a Weapon sprite for the Player
+- Add a Projectile sprite for the Player's Weapon
+- Add a HomeBase sprite
+- Add a level sprite 
+
+## Stretch Goals/Milestones
+
+### Audio
+Audio for firing weapons, being hit by an enemy, or dying. Background music for the game. 
