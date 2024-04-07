@@ -29,6 +29,10 @@ public class Game extends ApplicationAdapter {
 	private Array<Rectangle> raindrops;
 	private long lastDropTime;
 
+	// new create method:
+	// create the Player, the HomeBase, the Weapon, and the Game/GameScreen
+
+
 	@Override
 	public void create() {
 		// load the images for the droplet and the bucket, 64x64 pixels each

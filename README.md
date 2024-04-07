@@ -12,7 +12,6 @@ This project is a top-down combat/shooter game where the player is tasked with d
 The main code for the project is located in the 'core/src' directory.
 
 ### Classes
-
 #### Game
 This class represents the Game itself and is where everything is initialized and ran
 
@@ -31,7 +30,6 @@ Attributes:
 This class will represent the player character
 Attributes:
 - Integer: health
-- Integer: damage
 - Integer: speed
 - Weapon: weapon
 - HomeBase: homeBase
@@ -79,7 +77,20 @@ To do this, run the 'DesktopLauncher' class located in the 'desktop/src/org/ooad
 ## Milestones to be Completed
 
 ### Fundamental Mechanics
-TODO
+- Implement player movement (WASD or Arrow Keys)
+- Implement enemy movement (gravitate towards the Player or HomeBase)
+- Implement player attack (Mouse Click)
+- Implement reloading for the player's weapon (R Key)
+- Implement enemy attack (if in range of the Player or HomeBase)
+- Implement collision detection
+  - Level
+  - Player
+  - Enemy
+  - HomeBase
+  - Projectile
+- Implement health system for the Player, HomeBase, and Enemy
+  - Player and HomeBase health will decrease when hit by an enemy
+  - Enemy health will decrease when hit by a projectile
 
 
 ### Visuals
@@ -98,3 +109,6 @@ Audio for firing weapons, being hit by an enemy, or dying. Background music for 
 
 ### Weapon Modifiers
 Add modifiers to the weapons that can be applied to the projectiles. These modifiers can be things like poison, fire, or ice.
+
+## External Libraries
+- LibGDX
