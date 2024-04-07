@@ -95,3 +95,6 @@ TODO
 
 ### Audio
 Audio for firing weapons, being hit by an enemy, or dying. Background music for the game. 
+
+### Weapon Modifiers
+Add modifiers to the weapons that can be applied to the projectiles. These modifiers can be things like poison, fire, or ice.
