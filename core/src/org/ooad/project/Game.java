@@ -19,6 +19,53 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class Game extends ApplicationAdapter {
+
+
+	@Override
+	public void create() {
+		// @TODO: add the create method
+
+
+	}
+
+	@Override
+	public void render() {
+		// @TODO: add the render method
+
+
+	}
+
+	@Override
+	public void dispose() {
+		// @TODO: add the dispose method
+
+
+	}
+
+}
+
+/*
+package org.ooad.project;
+
+import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.ScreenUtils;
+
+import java.util.Iterator;
+
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
+
+public class Game extends ApplicationAdapter {
 	private Texture raindropImage;
 	private Texture bucketImage;
 	private Sound raindropSound;
@@ -28,10 +75,6 @@ public class Game extends ApplicationAdapter {
 	private Rectangle bucket;
 	private Array<Rectangle> raindrops;
 	private long lastDropTime;
-
-	// new create method:
-	// create the Player, the HomeBase, the Weapon, and the Game/GameScreen
-
 
 	@Override
 	public void create() {
@@ -139,14 +182,5 @@ public class Game extends ApplicationAdapter {
 		batch.dispose();
 	}
 
-	// we need to implement create, render, and dispose methods
-	// in create, load assets and initialize variables
-	//		- load level, textures, characters, sounds, etc.
-	// in render, update the game state and draw everything
-	//		- update positions, check for collisions, etc.
-	// in dispose, dispose of all the native resources
-	// 		- call dispose methods where necessary
-
-
-
 }
+ */
