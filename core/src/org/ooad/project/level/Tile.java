@@ -1,4 +1,4 @@
 package org.ooad.project.level;
 
-public class HomeBase {
+public class Tile {
 }

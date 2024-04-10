@@ -1,4 +1,4 @@
 package org.ooad.project.items;
 
-public class Weapon {
+public class Tower {
 }
