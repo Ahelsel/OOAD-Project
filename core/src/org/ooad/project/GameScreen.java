@@ -25,8 +25,8 @@ public class GameScreen implements Screen {
     private Texture grassTexture;
 
     public GameScreen() {
-        gameWidth = 9;
-        gameHeight = 9;
+        gameWidth = 18;
+        gameHeight = 18;
 
         level = new Level(gameWidth, gameHeight);
         batch = new SpriteBatch();
@@ -55,9 +55,9 @@ public class GameScreen implements Screen {
             for (int j = 0; j < gameHeight; j++) {
                 Tile tile = level.getTile(i, j);
                 // straight line of walkable tiles from left to right in middle
-                if (j == 4) {
+                if (j == gameWidth/2) {
                     tile.setWalkable(true);
-                    if (i == 4) {
+                    if (i == gameWidth/2) {
                         tile.setContainsEnemy(true);
                     }
                 }
