@@ -39,8 +39,18 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float v) {
-        batch.begin();
+        renderLevel();
 
+        // @TODO: render towers
+        // @TODO: render projectiles
+
+        renderEnemies();
+
+        // @TODO: render GUI/health bar
+    }
+
+    private void renderLevel() {
+        batch.begin();
         for (int i = 0; i < gameWidth; i++) {
             for (int j = 0; j < gameHeight; j++) {
                 Tile tile = level.getTile(i, j);
@@ -51,18 +61,14 @@ public class GameScreen implements Screen {
                         tile.setContainsEnemy(true);
                     }
                 }
-
                 if (tile.isWalkable()) {
                     batch.draw(pathTexture, i*50, j*50, 50, 50);
                 } else {
                     batch.draw(grassTexture, i*50, j*50, 50, 50);
                 }
-
             }
         }
-
         batch.end();
-        renderEnemies();
     }
 
     private void renderEnemies() {
