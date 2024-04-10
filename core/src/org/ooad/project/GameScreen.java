@@ -12,12 +12,12 @@ import org.ooad.project.level.Tile;
 import java.awt.*;
 
 public class GameScreen implements Screen {
+    private Integer gameWidth = 9;
+    private Integer gameHeight = 9;
+
 
     private Level level;
     private ShapeRenderer shapeRenderer;
-
-    private Integer gameWidth = 9;
-    private Integer gameHeight = 9;
 
     // texture for the path/grass
     private SpriteBatch batch;
