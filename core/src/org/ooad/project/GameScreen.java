@@ -33,19 +33,18 @@ public class GameScreen implements Screen {
 
         pathTexture = new Texture(Gdx.files.internal("path.png"));
         grassTexture = new Texture(Gdx.files.internal("grass.png"));
+
         shapeRenderer = new ShapeRenderer();
     }
 
     @Override
     public void render(float v) {
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(com.badlogic.gdx.graphics.Color.RED);
         batch.begin();
 
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
+        for (int i = 0; i < gameWidth; i++) {
+            for (int j = 0; j < gameHeight; j++) {
                 Tile tile = level.getTile(i, j);
-                // straight line from left to right
+                // straight line of walkable tiles from left to right in middle
                 if (j == 4) {
                     tile.setWalkable(true);
                     if (i == 4) {
@@ -55,10 +54,6 @@ public class GameScreen implements Screen {
 
                 if (tile.isWalkable()) {
                     batch.draw(pathTexture, i*50, j*50, 50, 50);
-                    if (tile.containsEnemy()) {
-                        // render LibGDX red square 50x50 starting at top left (i*50, j*50)
-                        shapeRenderer.circle(i*50 + 25, j*50 + 25, 10);
-                    }
                 } else {
                     batch.draw(grassTexture, i*50, j*50, 50, 50);
                 }
@@ -66,8 +61,22 @@ public class GameScreen implements Screen {
             }
         }
 
-        shapeRenderer.end();
         batch.end();
+        renderEnemies();
+    }
+
+    private void renderEnemies() {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(com.badlogic.gdx.graphics.Color.RED);
+        for (int i = 0; i < gameWidth; i++) {
+            for (int j = 0; j < gameHeight; j++) {
+                Tile tile = level.getTile(i, j);
+                if (tile.containsEnemy()) {
+                    shapeRenderer.circle(i*50 + 25, j*50 + 25, 10);
+                }
+            }
+        }
+        shapeRenderer.end();
     }
 
     @Override
