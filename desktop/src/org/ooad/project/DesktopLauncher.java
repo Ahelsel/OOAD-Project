@@ -10,6 +10,13 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
 		config.setTitle("OOAD-Project");
+
+		// the tiles are 50px in size, and the level is 9x9, so we do this
+		// so that there is no filler/black space around the level when the window is rendered
+		config.setWindowedMode(50*9, 50*9);
+		config.setResizable(false);
+
+
 		new Lwjgl3Application(new Game(), config);
 	}
 }
