@@ -1,7 +1,10 @@
 package org.ooad.project;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import org.ooad.project.level.Level;
 import org.ooad.project.level.Tile;
@@ -16,17 +19,28 @@ public class GameScreen implements Screen {
     private Integer gameWidth = 9;
     private Integer gameHeight = 9;
 
+    // texture for the path/grass
+    private SpriteBatch batch;
+    private Texture pathTexture;
+    private Texture grassTexture;
+
     public GameScreen() {
         gameWidth = 9;
         gameHeight = 9;
 
         level = new Level(gameWidth, gameHeight);
+        batch = new SpriteBatch();
+
+        pathTexture = new Texture(Gdx.files.internal("path.png"));
+        grassTexture = new Texture(Gdx.files.internal("grass.png"));
         shapeRenderer = new ShapeRenderer();
     }
 
     @Override
     public void render(float v) {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(com.badlogic.gdx.graphics.Color.RED);
+        batch.begin();
 
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
@@ -40,25 +54,20 @@ public class GameScreen implements Screen {
                 }
 
                 if (tile.isWalkable()) {
-                    // render LibGDX yellow square 50x50 starting at top left (i*50, j*50)
-                    shapeRenderer.setColor(com.badlogic.gdx.graphics.Color.YELLOW);
-                    shapeRenderer.rect(i*50, j*50, 50, 50);
+                    batch.draw(pathTexture, i*50, j*50, 50, 50);
                     if (tile.containsEnemy()) {
                         // render LibGDX red square 50x50 starting at top left (i*50, j*50)
-                        shapeRenderer.setColor(com.badlogic.gdx.graphics.Color.RED);
                         shapeRenderer.circle(i*50 + 25, j*50 + 25, 10);
-
                     }
                 } else {
-                    // render LibGDX green square 50x50 starting at top left (i*50, j*50)
-                    shapeRenderer.setColor(com.badlogic.gdx.graphics.Color.FOREST);
-                    shapeRenderer.rect(i*50, j*50, 50, 50);
+                    batch.draw(grassTexture, i*50, j*50, 50, 50);
                 }
 
             }
         }
 
         shapeRenderer.end();
+        batch.end();
     }
 
     @Override
@@ -89,6 +98,8 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         shapeRenderer.dispose();
+        pathTexture.dispose();
+        grassTexture.dispose();
     }
 
     public Integer getGameWidth() {
