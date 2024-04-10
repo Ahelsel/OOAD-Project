@@ -3,10 +3,17 @@ package org.ooad.project.level;
 public class Level {
     private Tile[][] tiles;
 
-    public Level() {
-        tiles = new Tile[9][9];
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
+    private Integer width;
+    private Integer height;
+
+    public Level(Integer width, Integer height) {
+        this.width = width;
+        this.height = height;
+
+        tiles = new Tile[width][height];
+
+        for (int i = 0; i < width; i++){
+            for (int j = 0; j < height; j++) {
                     tiles[i][j] = new Tile(false);
             }
         }

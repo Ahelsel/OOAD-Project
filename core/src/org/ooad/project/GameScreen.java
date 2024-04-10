@@ -13,8 +13,14 @@ public class GameScreen implements Screen {
     private Level level;
     private ShapeRenderer shapeRenderer;
 
+    private Integer gameWidth = 9;
+    private Integer gameHeight = 9;
+
     public GameScreen() {
-        level = new Level();
+        gameWidth = 9;
+        gameHeight = 9;
+
+        level = new Level(gameWidth, gameHeight);
         shapeRenderer = new ShapeRenderer();
     }
 
@@ -48,7 +54,6 @@ public class GameScreen implements Screen {
                     shapeRenderer.setColor(com.badlogic.gdx.graphics.Color.FOREST);
                     shapeRenderer.rect(i*50, j*50, 50, 50);
                 }
-
 
             }
         }
@@ -84,6 +89,14 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         shapeRenderer.dispose();
+    }
+
+    public Integer getGameWidth() {
+        return gameWidth;
+    }
+
+    public Integer getGameHeight() {
+        return gameHeight;
     }
 
 }
