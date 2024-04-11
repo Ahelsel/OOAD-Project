@@ -2,18 +2,18 @@ package org.ooad.project;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ScreenUtils;
 import org.ooad.project.entity.Enemy;
 import org.ooad.project.level.Level;
 import org.ooad.project.level.Tile;
-
-import java.awt.*;
 
 public class GameScreen implements Screen {
     private Integer gameWidth = 9;
@@ -29,8 +29,10 @@ public class GameScreen implements Screen {
     private Texture pathTexture;
     private Texture grassTexture;
 
+    private OrthographicCamera camera;
+
     private Animation<TextureRegion> entityAnimation;
-    private Array<Enemy> enemies = new Array<>();
+    private Array<Enemy> enemyArray;
     private float animationTime = 0f;
 
     public GameScreen() {
@@ -39,9 +41,13 @@ public class GameScreen implements Screen {
 
         level = new Level(gameWidth, gameHeight);
         batch = new SpriteBatch();
+        enemyArray = new Array<>();
 
         pathTexture = new Texture(Gdx.files.internal("path.png"));
         grassTexture = new Texture(Gdx.files.internal("grass.png"));
+
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, (float)(gameWidth * tileWidth), (float)(gameHeight * tileWidth));
 
         loadEntityAnimation();
     }
@@ -61,13 +67,14 @@ public class GameScreen implements Screen {
     @Override
     public void render(float v) {
         // clear the screen
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
+        ScreenUtils.clear(Color.BLACK);
+        camera.update();
+        batch.setProjectionMatrix(camera.combined);
 
         // do all the updating here
         animationTime += v;
         //animationTime += Gdx.graphics.getDeltaTime();
-        updateEnemyPositions(enemies);
+        updateEnemyPositions();
 
         // do all the rendering here
         renderLevel();
@@ -90,7 +97,7 @@ public class GameScreen implements Screen {
                         Enemy enemyToAdd = new Enemy();
                         enemyToAdd.setXCoordinate(i*50.0);
                         enemyToAdd.setYCoordinate(j*50.0);
-                        enemies.add(enemyToAdd);
+                        enemyArray.add(enemyToAdd);
                     }
                 }
                 if (tile.isWalkable()) {
@@ -106,7 +113,7 @@ public class GameScreen implements Screen {
     private void renderEnemies() {
         batch.begin();
 
-        for (Enemy enemy : enemies) {
+        for (Enemy enemy : enemyArray) {
             TextureRegion currentFrame = entityAnimation.getKeyFrame(animationTime, true);
             batch.draw(currentFrame, enemy.getXCoordinate().intValue(), enemy.getYCoordinate().intValue(), 50, 50);
         }
@@ -114,12 +121,12 @@ public class GameScreen implements Screen {
         batch.end();
     }
 
-    public void updateEnemyPositions(Array<Enemy> enemies)  {
+    public void updateEnemyPositions()  {
         // this will be called every frame before rendering. We need to move the enemies along the path
         // at a rate that makes sense. We can do 1 tiles per second for example.
         // render rate is 60fps, so we can move 1/60 tiles per frame
 
-        for (Enemy enemy : enemies) {
+        for (Enemy enemy : enemyArray) {
             Double x = enemy.getXCoordinate();
             Double y = enemy.getYCoordinate();
 
