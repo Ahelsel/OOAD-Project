@@ -1,20 +1,16 @@
 package org.ooad.project.entity;
 
-import org.ooad.project.level.Tile;
-
 public class Enemy {
     Double health;
-    Double speed;
     Boolean isDead;
-    private Double xCoordinate;
-    private Double yCoordinate;
+    private Float xCoordinate;
+    private Float yCoordinate;
 
     public Enemy() {
         this.health = 100.0;
-        this.speed = 1.0;
         this.isDead = false;
-        this.xCoordinate = 0.0;
-        this.yCoordinate = 0.0;
+        this.xCoordinate = 0.0f;
+        this.yCoordinate = 0.0f;
     }
 
     public Boolean isDead() {
@@ -29,20 +25,25 @@ public class Enemy {
 
     }
 
-    public Double getXCoordinate() {
+    public Float getXCoordinate() {
         return xCoordinate;
     }
 
-    public Double getYCoordinate() {
+    public Float getYCoordinate() {
         return yCoordinate;
     }
 
-    public void setXCoordinate(Double xCoordinate) {
-        this.xCoordinate = xCoordinate;
+    public void setXCoordinate(Float xCoord) {
+        this.xCoordinate = xCoord;
     }
 
-    public void setYCoordinate(Double yCoordinate) {
-        this.yCoordinate = yCoordinate;
+    public void setYCoordinate(Float yCoord) {
+        this.yCoordinate = yCoord;
+    }
+
+    public void changePosition(Float x, Float y) {
+        this.xCoordinate = x;
+        this.yCoordinate = y;
     }
 
 }
