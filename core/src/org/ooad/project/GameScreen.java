@@ -2,9 +2,7 @@ package org.ooad.project;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,7 +16,6 @@ import org.ooad.project.level.Tile;
 public class GameScreen implements Screen {
     private Integer gameWidth = 9;
     private Integer gameHeight = 9;
-
     private Double tileWidth = 50.0;
 
 
@@ -30,7 +27,8 @@ public class GameScreen implements Screen {
     private Texture grassTexture;
 
     private Animation<TextureRegion> entityAnimation;
-    private Array<Enemy> enemyArray;
+    //private Array<Enemy> enemyArray;
+    private Enemy enemy;
     private float animationTime = 0f;
 
     public GameScreen() {
@@ -39,7 +37,8 @@ public class GameScreen implements Screen {
 
         level = new Level(gameWidth, gameHeight);
         batch = new SpriteBatch();
-        enemyArray = new Array<>();
+        //enemyArray = new Array<>();
+        enemy = new Enemy();
 
         pathTexture = new Texture(Gdx.files.internal("path.png"));
         grassTexture = new Texture(Gdx.files.internal("grass.png"));
@@ -62,12 +61,12 @@ public class GameScreen implements Screen {
     @Override
     public void render(float v) {
         // clear the screen
-        //ScreenUtils.clear(Color.BLACK);
+        ScreenUtils.clear(Color.BLACK);
 
         // do all the updating here
-        animationTime += v;
-        //animationTime += Gdx.graphics.getDeltaTime();
-        updateEnemyPositions();
+        //animationTime += v;
+        animationTime += Gdx.graphics.getDeltaTime();
+        updateEnemyPosition();
 
         // do all the rendering here
         renderLevel();
@@ -90,7 +89,8 @@ public class GameScreen implements Screen {
                         Enemy enemyToAdd = new Enemy();
                         enemyToAdd.setXCoordinate(i*50.0);
                         enemyToAdd.setYCoordinate(j*50.0);
-                        enemyArray.add(enemyToAdd);
+                        //enemyArray.add(enemyToAdd);
+                        enemy = enemyToAdd;
                     }
                 }
                 if (tile.isWalkable()) {
@@ -111,33 +111,35 @@ public class GameScreen implements Screen {
         // is running and replace it with the one in the new position. The one in the new position is already being
         // correctly drawn/animated, so we just need to figure out how to get rid of the old one
 
-        for (Enemy enemy : enemyArray) {
+        //for (Enemy enemy : enemyArray) {
             TextureRegion currentFrame = entityAnimation.getKeyFrame(animationTime, true);
 
             batch.draw(currentFrame, enemy.getXCoordinate().intValue(), enemy.getYCoordinate().intValue(), 50, 50);
-        }
+        //}
 
         batch.end();
     }
 
-    public void updateEnemyPositions()  {
+    public void updateEnemyPosition()  {
         // this will be called every frame before rendering. We need to move the enemies along the path
         // at a rate that makes sense. We can do 1 tiles per second for example.
         // render rate is 60fps, so we can move 1/60 tiles per frame
 
-        for (Enemy enemy : enemyArray) {
-            Double x = enemy.getXCoordinate();
-            Double y = enemy.getYCoordinate();
+        //for (Enemy enemy : enemyArray) {
+            float deltaTime = Gdx.graphics.getDeltaTime();
+
+            Double movementsPerSecond = 100.0;
+            Double movementThisFrame = movementsPerSecond * deltaTime;
 
             // this logic will need to be changed once corners are implemented
             // or if the path is not left to right (i.e. top to bottom)
-            Double newX = x + (1.0/60.0 * tileWidth);
-            Double newY = y;
+            Double newX = enemy.getXCoordinate() + (50);
+            Double newY = enemy.getYCoordinate();
 
             enemy.setXCoordinate(newX);
             enemy.setYCoordinate(newY);
 
-        }
+        //}
 
 
     }
