@@ -20,12 +20,11 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class Game extends com.badlogic.gdx.Game {
-
 	private Screen gameScreen;
 
 	@Override
 	public void create() {
-		// create the camera
+		// create the screen
 		gameScreen = new GameScreen();
 		setScreen(gameScreen);
 	}
