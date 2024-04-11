@@ -29,8 +29,6 @@ public class GameScreen implements Screen {
     private Texture pathTexture;
     private Texture grassTexture;
 
-    private OrthographicCamera camera;
-
     private Animation<TextureRegion> entityAnimation;
     private Array<Enemy> enemyArray;
     private float animationTime = 0f;
@@ -45,9 +43,6 @@ public class GameScreen implements Screen {
 
         pathTexture = new Texture(Gdx.files.internal("path.png"));
         grassTexture = new Texture(Gdx.files.internal("grass.png"));
-
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, (float)(gameWidth * tileWidth), (float)(gameHeight * tileWidth));
 
         loadEntityAnimation();
     }
@@ -67,9 +62,7 @@ public class GameScreen implements Screen {
     @Override
     public void render(float v) {
         // clear the screen
-        ScreenUtils.clear(Color.BLACK);
-        camera.update();
-        batch.setProjectionMatrix(camera.combined);
+        //ScreenUtils.clear(Color.BLACK);
 
         // do all the updating here
         animationTime += v;
@@ -113,8 +106,14 @@ public class GameScreen implements Screen {
     private void renderEnemies() {
         batch.begin();
 
+        // the problem lies here. after the first frame, the old animation stays in place and a new one is put next to it.
+        // this is because the old animation is not cleared. We need to somehow get rid of the old animated one that
+        // is running and replace it with the one in the new position. The one in the new position is already being
+        // correctly drawn/animated, so we just need to figure out how to get rid of the old one
+
         for (Enemy enemy : enemyArray) {
             TextureRegion currentFrame = entityAnimation.getKeyFrame(animationTime, true);
+
             batch.draw(currentFrame, enemy.getXCoordinate().intValue(), enemy.getYCoordinate().intValue(), 50, 50);
         }
 
