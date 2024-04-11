@@ -106,16 +106,8 @@ public class GameScreen implements Screen {
     private void renderEnemies() {
         batch.begin();
 
-        // the problem lies here. after the first frame, the old animation stays in place and a new one is put next to it.
-        // this is because the old animation is not cleared. We need to somehow get rid of the old animated one that
-        // is running and replace it with the one in the new position. The one in the new position is already being
-        // correctly drawn/animated, so we just need to figure out how to get rid of the old one
-
-        //for (Enemy enemy : enemyArray) {
-            TextureRegion currentFrame = entityAnimation.getKeyFrame(animationTime, true);
-
-            batch.draw(currentFrame, enemy.getXCoordinate().intValue(), enemy.getYCoordinate().intValue(), 50, 50);
-        //}
+        TextureRegion currentFrame = entityAnimation.getKeyFrame(animationTime, true);
+        batch.draw(currentFrame, enemy.getXCoordinate().floatValue(), enemy.getYCoordinate().floatValue(), 50, 50);
 
         batch.end();
     }
@@ -125,22 +117,18 @@ public class GameScreen implements Screen {
         // at a rate that makes sense. We can do 1 tiles per second for example.
         // render rate is 60fps, so we can move 1/60 tiles per frame
 
-        //for (Enemy enemy : enemyArray) {
-            float deltaTime = Gdx.graphics.getDeltaTime();
+        float deltaTime = Gdx.graphics.getDeltaTime();
 
-            Double movementsPerSecond = 100.0;
-            Double movementThisFrame = movementsPerSecond * deltaTime;
+        Double movementSpeed = 100.0;
+        Double movementThisFrame = movementSpeed * deltaTime;
 
-            // this logic will need to be changed once corners are implemented
-            // or if the path is not left to right (i.e. top to bottom)
-            Double newX = enemy.getXCoordinate() + (50);
-            Double newY = enemy.getYCoordinate();
+        // this logic will need to be changed once corners are implemented
+        // or if the path is not left to right (i.e. top to bottom)
+        Double newX = enemy.getXCoordinate() + movementThisFrame;
+        Double newY = enemy.getYCoordinate();
 
-            enemy.setXCoordinate(newX);
-            enemy.setYCoordinate(newY);
-
-        //}
-
+        enemy.setXCoordinate(newX);
+        enemy.setYCoordinate(newY);
 
     }
 
