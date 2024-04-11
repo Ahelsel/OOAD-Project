@@ -17,8 +17,6 @@ public class GameScreen implements Screen {
     private Integer gameWidth = 9;
     private Integer gameHeight = 9;
     private Double tileWidth = 50.0;
-
-
     private Level level;
 
     // texture for the path/grass
@@ -28,11 +26,6 @@ public class GameScreen implements Screen {
 
     private Animation<TextureRegion> entityAnimation;
     private Enemy sampleEnemy;
-
-    // temp
-    Float enemyX = 0.0f;
-    Float enemyY = (gameWidth/ 2) * 50.0f;
-    // end temp
 
     private float animationTime = 0f;
 
@@ -46,6 +39,7 @@ public class GameScreen implements Screen {
         pathTexture = new Texture(Gdx.files.internal("path.png"));
         grassTexture = new Texture(Gdx.files.internal("grass.png"));
 
+        // create enemies here
         sampleEnemy = new Enemy(0.0f, (gameWidth/2)*50.0f);
 
         loadEntityAnimation();
