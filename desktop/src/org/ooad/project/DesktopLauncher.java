@@ -13,7 +13,7 @@ public class DesktopLauncher {
 
 		// the tiles are 50px in size, and the level is 9x9, so we do this
 		// so that there is no filler/black space around the level when the window is rendered
-		config.setWindowedMode(50*18, 50*18);
+		config.setWindowedMode(50*9, 50*9);
 		config.setResizable(false);
 
 
