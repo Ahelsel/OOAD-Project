@@ -43,6 +43,7 @@ public class Level {
         return tiles[i][j];
     }
 
+
     public Tile getFirstTile() {
         return firstTile;
     }
@@ -57,6 +58,72 @@ public class Level {
 
     public Integer getHeight() {
         return height;
+    }
+
+    public void setFirstTile(Tile firstTile) {
+        this.firstTile = firstTile;
+    }
+
+    public void setLastTile(Tile lastTile) {
+        this.lastTile = lastTile;
+    }
+
+    public Tile getTileAtCoordinates(Float x, Float y) {
+        return tiles[(int)(x/50)][(int)(y/50)];
+    }
+
+    public Tile getTileAbove(Tile tile) {
+        int x = tile.getXIndex();
+        int y = tile.getYIndex() + 1; // Tile above
+        if (y >= height) return null; // Check boundary
+        return tiles[x][y];
+    }
+
+    public Tile getTileBelow(Tile tile) {
+        int x = tile.getXIndex();
+        int y = tile.getYIndex() - 1; // Tile below
+        if (y < 0) return null; // Check boundary
+        return tiles[x][y];
+    }
+
+    public Tile getTileLeft(Tile tile) {
+        int x = tile.getXIndex() - 1; // Tile to the left
+        int y = tile.getYIndex();
+        if (x < 0) return null; // Check boundary
+        return tiles[x][y];
+    }
+
+    public Tile getTileRight(Tile tile) {
+        int x = tile.getXIndex() + 1; // Tile to the right
+        int y = tile.getYIndex();
+        if (x >= width) return null; // Check boundary
+        return tiles[x][y];
+    }
+
+    public Boolean isLeftTurn(Tile tile) {
+        Tile tileAbove = getTileAbove(tile);
+        Tile tileLeft = getTileLeft(tile);
+        Tile tileRight = getTileRight(tile);
+
+        // Only proceed if all required tiles are non-null and walkable
+        if (tileAbove != null && ((tileLeft != null && tileLeft.isWalkable() && tileAbove.isWalkable()) ||
+                (tileRight != null && tileRight.isWalkable() && tileAbove.isWalkable()))) {
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean isRightTurn(Tile tile) {
+        Tile tileBelow = getTileBelow(tile);
+        Tile tileLeft = getTileLeft(tile);
+        Tile tileRight = getTileRight(tile);
+
+        // Only proceed if all required tiles are non-null and walkable
+        if (tileBelow != null && ((tileLeft != null && tileLeft.isWalkable() && tileBelow.isWalkable()) ||
+                (tileRight != null && tileRight.isWalkable() && tileBelow.isWalkable()))) {
+            return true;
+        }
+        return false;
     }
 
 

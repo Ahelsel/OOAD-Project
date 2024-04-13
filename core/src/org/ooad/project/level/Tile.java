@@ -4,16 +4,18 @@ public class Tile {
 
     private Boolean isWalkable;
     private Tile nextTile;
+    private Tile previousTile;
     private Boolean isFirstTile;
     private Boolean isLastTile;
 
-    public Double xCoordinate;
-    public Double yCoordinate;
-    public Integer xIndex;
-    public Integer yIndex;
+    private Double xCoordinate;
+    private Double yCoordinate;
+    private Integer xIndex;
+    private Integer yIndex;
 
-    public Integer height;
-    public Integer width;
+    private Float height;
+    private Float width;
+
 
     public Tile(boolean isWalkable) {
         this.isWalkable = isWalkable;
@@ -27,8 +29,8 @@ public class Tile {
         this.xIndex = 0;
         this.yIndex = 0;
 
-        this.height = 0;
-        this.width = 0;
+        this.height = 50.0f;
+        this.width = 50.0f;
     }
 
     public Boolean isWalkable() {
@@ -96,12 +98,30 @@ public class Tile {
         this.yIndex = yIndex;
     }
 
-    public void setHeight(Integer height) {
+    public void setHeight(Float height) {
         this.height = height;
     }
 
-    public void setWidth(Integer width) {
+    public void setWidth(Float width) {
         this.width = width;
     }
+
+
+    public Float getCenterX() {
+        return (float) (xCoordinate + width / 2);
+    }
+
+    public Float getCenterY() {
+        return (float) (yCoordinate + height / 2);
+    }
+
+    public void setPreviousTile(Tile previousTile) {
+        this.previousTile = previousTile;
+    }
+
+    public Tile getPreviousTile() {
+        return previousTile;
+    }
+
 
 }
