@@ -10,6 +10,7 @@ public class Enemy {
         LEFT
     }
     private Direction direction;
+    private Float speedMultiplier = 10.0f;
     private Double health;
     private Boolean isDead;
     private PathFinder pathFinder;
@@ -57,6 +58,10 @@ public class Enemy {
 
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    public Float getSpeedMultiplier() {
+        return speedMultiplier;
     }
 
 }

@@ -6,12 +6,26 @@ public class Level {
     private Tile[][] tiles;
     private Tile firstTile;
     private Tile lastTile;
+    private Boolean generated = false;
+
+    private static Level instance = null;
 
     private Integer width;
     private Integer height;
     PathFinder pathFinder;
     private Integer numEnemies;
     private Enemy enemy;
+
+    public static Level getInstance(Integer width, Integer height, Integer numEnemies) {
+        if (instance == null) {
+            instance = new Level(width, height, numEnemies);
+        }
+        if (!instance.generated) {
+            instance.generateLevel();
+            instance.generated = true;
+        }
+        return instance;
+    }
 
     public Level(Integer width, Integer height, Integer numEnemies) {
         this.width = width;

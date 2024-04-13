@@ -22,8 +22,7 @@ public class GameScreen implements Screen {
         gameWidth = 9;
         gameHeight = 9;
 
-        level = new Level(gameWidth, gameHeight, 1);
-        level.generateLevel();
+        level = Level.getInstance(gameWidth, gameHeight, 1);
 
         levelRenderer = new LevelRenderer(level);
         towerRenderer = new TowerRenderer(level);
