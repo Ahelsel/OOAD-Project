@@ -34,11 +34,14 @@ public class GameScreen implements Screen {
     private Animation<TextureRegion> entityAnimation;
     private Enemy sampleEnemy;
 
+    private Game gameInstance = new Game();
+
     private Boolean pathFound = false;
 
     private float animationTime = 0f;
 
-    public GameScreen() {
+    public GameScreen(Game gameInstance) {
+        this.gameInstance = gameInstance;
         gameWidth = 9;
         gameHeight = 9;
 
@@ -225,6 +228,11 @@ public class GameScreen implements Screen {
             deltaX = 10.0f / 60.0f;
         }
         enemy.move(deltaX, deltaY);
+
+        // Check if enemy has reached the end of the path
+        if (level.getLastTile().getXCoordinate().equals(enemy.getX()) && level.getLastTile().getYCoordinate().equals(enemy.getY())) {
+            gameInstance.decreaseLife(1); // Subtract life
+        }
     }
 
     @Override
