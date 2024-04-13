@@ -1,5 +1,7 @@
 # Semester Project - CSCI 4448 Object Oriented Analysis and Design
 
+TODO: Update READme
+
 ## Team Members
 - Anthony Helsel
 - Jesus Carnero
@@ -15,54 +17,35 @@ The main code for the project is located in the 'core/src' directory.
 #### Game
 This class represents the Game itself and is where everything is initialized and ran
 
-#### Level
-This class represents the playable area of the game
-Attributes:
-- Integer: width
-- Integer: height
-
 #### GameScreen
 This class will represent the screen that the game is played on and what is displayed to the user (i.e if there needs to be a pause menu or ammo count, it will be displayed here)
 Attributes:
 - Game: game
 
-#### Player
-This class will represent the player character
+#### Level
+The Level holds information about the Tiles and the Enemies
 Attributes:
-- Integer: health
-- Integer: speed
-- Weapon: weapon
-- HomeBase: homeBase
-- Boolean: isDead
+- Tile[][]: tiles
+- Enemy[]: enemies
+
+#### Tile
+This class represents 50x50 pixel tiles that make up the level
+A tile can be walkable or not walkable; if it is not walkable, the player or enemy cannot move through it
+Towers cannot be placed on non-walkable tiles
+Attributes:
+- Boolean: isWalkable
+
+#### PathFinder
 
 #### Enemy
 This class represents the enemies (for now, just one enemy type)
 Attributes:
 - Integer: health
-- Integer: damage
 - Integer: speed
 
-#### Weapon
-This class represents the weapons for the player
-Attributes: 
-- Boolean: isRanged
-- Integer: damage
-- Integer: range (if not ranged)
-- Integer: ammoCapacity (if ranged)
-- Integer: ammoCount (if ranged)
-- Integer: reloadTime (if ranged)
+#### Tower
 
-#### HomeBase
-This class represents the area the player must protect
-Attributes:
-- Integer: health
-- Double: x
-- Double: y
-- Integer: radius
-- Boolean: isDestroyed
-- Boolean: isShielded (Stretch Goal)
-
-#### Projectile (Stretch Goal)
+#### Projectile
 If a weapon is a ranged weapon, it will have a projectile represented by this class
 Attributes:
 - Boolean: modifier (if the projectile has a special effect) (Stretch Goal)

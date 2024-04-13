@@ -32,8 +32,4 @@ public class PathFinder {
         return pivotPoints;
     }
 
-    public Integer getNumPivotPoints() {
-        return pivotPoints.size;
-    }
-
 }
