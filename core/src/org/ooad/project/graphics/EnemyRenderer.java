@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import org.ooad.project.entity.Enemy;
 import org.ooad.project.level.Level;
-import org.ooad.project.level.PathFinder;
 import org.ooad.project.level.PivotPoint;
 
 import java.util.Iterator;
@@ -47,6 +46,7 @@ public class EnemyRenderer {
     public void findDirection(Enemy enemy) {
         float proximity = 5.0f;
         Iterator<PivotPoint> iterator = enemy.getPathFinder().getPivotPoints().iterator();
+        System.out.println("Number of pivot points: " + enemy.getPathFinder().getNumPivotPoints());
 
         while (iterator.hasNext()) {
             PivotPoint pivot = iterator.next();

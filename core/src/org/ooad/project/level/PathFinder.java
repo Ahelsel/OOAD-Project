@@ -11,7 +11,6 @@ public class PathFinder {
         this.level = level;
         this.pathFound = false;
         this.pivotPoints = new Array<PivotPoint>();
-
         findPath();
     }
 
@@ -31,6 +30,10 @@ public class PathFinder {
 
     public Array<PivotPoint> getPivotPoints() {
         return pivotPoints;
+    }
+
+    public Integer getNumPivotPoints() {
+        return pivotPoints.size;
     }
 
 }

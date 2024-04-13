@@ -16,15 +16,6 @@ public class Enemy {
     private Float x = 0.0f;
     private Float y = 0.0f;
 
-    public Enemy() {
-        this.health = 100.0;
-        this.isDead = false;
-        this.x = 0.0f;
-        this.y = 0.0f;
-
-        this.direction = Direction.RIGHT;
-    }
-
     public Enemy(Float x, Float y, PathFinder pathFinder) {
         this.health = 100.0;
         this.isDead = false;

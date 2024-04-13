@@ -2,8 +2,6 @@ package org.ooad.project.level;
 
 import org.ooad.project.entity.Enemy;
 
-import java.nio.file.Path;
-
 public class Level {
     private Tile[][] tiles;
     private Tile firstTile;
@@ -42,6 +40,8 @@ public class Level {
         }
 
         pathFinder = new PathFinder(this);
+
+        System.out.println("NumPivotPoints: " + pathFinder.getNumPivotPoints());
 
         if (numEnemies > 0) {
             enemy = new Enemy(0.0f, (width/2)*50.0f, pathFinder);
@@ -150,41 +150,44 @@ public class Level {
                     previousTile.setNextTile(tile);
                 }
                 tile.setPreviousTile(previousTile);
-                // for Path finding
-                if (i == 0.0f && j == 0.0f) {
-                    tile.setFirstTile(true);
-                    this.setFirstTile(tile);
-                } else if (i == width - 1 && j == height - 1) {
-                    tile.setLastTile(true);
-                    this.setLastTile(tile);
-                }
-                // straight line of walkable tiles from left to right in middle
-                if (j == height/2) {
-                    if (i <= 2) {
-                        tile.setWalkable(true);
-                    }
-                }
-                if (i == 3) {
-                    if (j == height / 2 || j == height/2 + 1 || j == height/2 + 2 || j == height/2 + 3) {
-                        tile.setWalkable(true);
-                    }
-                }
-                if (i == 4 && j == height/2 + 3) {
-                    tile.setWalkable(true);
-                }
-                if (i == 5) {
-                    // if j is between gameHeight / 2 + 2 and gameHeight / 2 - 3), setWalkable(true)
-                    Integer topBound = height/2 + 3;
-                    Integer bottomBound = height/2 - 3;
-                    if (j >= bottomBound && j <= topBound) {
-                        tile.setWalkable(true);
-                    }
-                }
-                if (i > 5 && j == height/2 - 3) {
-                    tile.setWalkable(true);
-                }
+                assignTiles(tile, i.intValue(), j.intValue());
                 previousTile = tile;
             }
+        }
+    }
+
+    public void assignTiles(Tile tile, Integer i, Integer j) {
+        if (i == 0.0f && j == 0.0f) {
+            tile.setFirstTile(true);
+            this.setFirstTile(tile);
+        } else if (i == width - 1 && j == height - 1) {
+            tile.setLastTile(true);
+            this.setLastTile(tile);
+        }
+        // straight line of walkable tiles from left to right in middle
+        if (j == height/2) {
+            if (i <= 2) {
+                tile.setWalkable(true);
+            }
+        }
+        if (i == 3) {
+            if (j == height / 2 || j == height/2 + 1 || j == height/2 + 2 || j == height/2 + 3) {
+                tile.setWalkable(true);
+            }
+        }
+        if (i == 4 && j == height/2 + 3) {
+            tile.setWalkable(true);
+        }
+        if (i == 5) {
+            // if j is between gameHeight / 2 + 2 and gameHeight / 2 - 3), setWalkable(true)
+            Integer topBound = height/2 + 3;
+            Integer bottomBound = height/2 - 3;
+            if (j >= bottomBound && j <= topBound) {
+                tile.setWalkable(true);
+            }
+        }
+        if (i > 5 && j == height/2 - 3) {
+            tile.setWalkable(true);
         }
     }
 
