@@ -1,5 +1,9 @@
 package org.ooad.project.level;
 
+import org.ooad.project.entity.Enemy;
+
+import java.nio.file.Path;
+
 public class Level {
     private Tile[][] tiles;
     private Tile firstTile;
@@ -7,8 +11,11 @@ public class Level {
 
     private Integer width;
     private Integer height;
+    PathFinder pathFinder;
 
-    public Level(Integer width, Integer height) {
+    private Enemy enemy;
+
+    public Level(Integer width, Integer height, Integer numEnemies) {
         this.width = width;
         this.height = height;
 
@@ -33,6 +40,14 @@ public class Level {
                     tiles[i][j] = temp;
             }
         }
+
+        pathFinder = new PathFinder(this);
+
+        if (numEnemies > 0) {
+            enemy = new Enemy(0.0f, (width/2)*50.0f, pathFinder);
+        }
+
+        buildLevel();
     }
 
     public Tile[][] getTiles() {
@@ -48,12 +63,12 @@ public class Level {
         return firstTile;
     }
 
-    public Tile getLastTile() {
-        return lastTile;
-    }
-
     public Integer getWidth() {
         return width;
+    }
+
+    public Enemy getEnemy() {
+        return enemy;
     }
 
     public Integer getHeight() {
@@ -126,5 +141,51 @@ public class Level {
         return false;
     }
 
+    private void buildLevel() {
+        Tile previousTile = null;
+        for (Float i = 0.0f; i < width; i+=1.0f) {
+            for (Float j = 0.0f; j < height; j+=1.0f) {
+                Tile tile = this.getTile(i.intValue(), j.intValue());
+                if (previousTile != null) {
+                    previousTile.setNextTile(tile);
+                }
+                tile.setPreviousTile(previousTile);
+                // for Path finding
+                if (i == 0.0f && j == 0.0f) {
+                    tile.setFirstTile(true);
+                    this.setFirstTile(tile);
+                } else if (i == width - 1 && j == height - 1) {
+                    tile.setLastTile(true);
+                    this.setLastTile(tile);
+                }
+                // straight line of walkable tiles from left to right in middle
+                if (j == height/2) {
+                    if (i <= 2) {
+                        tile.setWalkable(true);
+                    }
+                }
+                if (i == 3) {
+                    if (j == height / 2 || j == height/2 + 1 || j == height/2 + 2 || j == height/2 + 3) {
+                        tile.setWalkable(true);
+                    }
+                }
+                if (i == 4 && j == height/2 + 3) {
+                    tile.setWalkable(true);
+                }
+                if (i == 5) {
+                    // if j is between gameHeight / 2 + 2 and gameHeight / 2 - 3), setWalkable(true)
+                    Integer topBound = height/2 + 3;
+                    Integer bottomBound = height/2 - 3;
+                    if (j >= bottomBound && j <= topBound) {
+                        tile.setWalkable(true);
+                    }
+                }
+                if (i > 5 && j == height/2 - 3) {
+                    tile.setWalkable(true);
+                }
+                previousTile = tile;
+            }
+        }
+    }
 
 }

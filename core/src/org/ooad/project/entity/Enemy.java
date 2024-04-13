@@ -1,15 +1,18 @@
 package org.ooad.project.entity;
 
-public class Enemy {
+import org.ooad.project.level.PathFinder;
 
+public class Enemy {
     public enum Direction {
         UP,
         DOWN,
-        RIGHT
+        RIGHT,
+        LEFT
     }
-    private Direction currentDirection;
+    private Direction direction;
     private Double health;
     private Boolean isDead;
+    private PathFinder pathFinder;
     private Float x = 0.0f;
     private Float y = 0.0f;
 
@@ -19,16 +22,17 @@ public class Enemy {
         this.x = 0.0f;
         this.y = 0.0f;
 
-        this.currentDirection = Direction.RIGHT;
+        this.direction = Direction.RIGHT;
     }
 
-    public Enemy(Float x, Float y) {
+    public Enemy(Float x, Float y, PathFinder pathFinder) {
         this.health = 100.0;
         this.isDead = false;
+        this.pathFinder = pathFinder;
         this.x = x;
         this.y = y;
 
-        this.currentDirection = Direction.RIGHT;
+        this.direction = Direction.RIGHT;
     }
 
     public Boolean isDead() {
@@ -52,12 +56,16 @@ public class Enemy {
         this.y += deltaY;
     }
 
-    public Direction getCurrentDirection() {
-        return currentDirection;
+    public PathFinder getPathFinder() {
+        return pathFinder;
     }
 
-    public void setCurrentDirection(Direction currentDirection) {
-        this.currentDirection = currentDirection;
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 
 }
