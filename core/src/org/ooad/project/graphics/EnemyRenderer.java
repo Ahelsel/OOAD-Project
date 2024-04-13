@@ -46,7 +46,6 @@ public class EnemyRenderer {
     public void findDirection(Enemy enemy) {
         float proximity = 5.0f;
         Iterator<PivotPoint> iterator = enemy.getPathFinder().getPivotPoints().iterator();
-        System.out.println("Number of pivot points: " + enemy.getPathFinder().getNumPivotPoints());
 
         while (iterator.hasNext()) {
             PivotPoint pivot = iterator.next();
@@ -96,11 +95,11 @@ public class EnemyRenderer {
         Float deltaX = 0.0f;
         Float deltaY = 0.0f;
         if (enemy.getDirection() == Enemy.Direction.DOWN) {
-            deltaY = -10.0f / 60.0f;
+            deltaY = -100.0f / 60.0f;
         } else if (enemy.getDirection() == Enemy.Direction.UP) {
-            deltaY = 10.0f / 60.0f;
+            deltaY = 100.0f / 60.0f;
         } else if (enemy.getDirection() == Enemy.Direction.RIGHT) {
-            deltaX = 10.0f / 60.0f;
+            deltaX = 100.0f / 60.0f;
         }
         enemy.move(deltaX, deltaY);
     }

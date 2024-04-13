@@ -23,6 +23,7 @@ public class GameScreen implements Screen {
         gameHeight = 9;
 
         level = new Level(gameWidth, gameHeight, 1);
+        level.generateLevel();
 
         levelRenderer = new LevelRenderer(level);
         towerRenderer = new TowerRenderer(level);
@@ -46,27 +47,27 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-
+        // @TODO: show game
     }
 
     @Override
     public void resize(int i, int i1) {
-
+        // @TODO: resize game
     }
 
     @Override
     public void pause() {
-
+        // @TODO: pause game
     }
 
     @Override
     public void resume() {
-
+        // @TODO: resume game
     }
 
     @Override
     public void hide() {
-
+        // @TODO: hide game
     }
 
     @Override

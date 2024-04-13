@@ -10,7 +10,7 @@ public class Level {
     private Integer width;
     private Integer height;
     PathFinder pathFinder;
-
+    private Integer numEnemies;
     private Enemy enemy;
 
     public Level(Integer width, Integer height, Integer numEnemies) {
@@ -39,15 +39,15 @@ public class Level {
             }
         }
 
+        this.numEnemies = numEnemies;
+        buildLevel();
+    }
+
+    public void generateLevel() {
         pathFinder = new PathFinder(this);
-
-        System.out.println("NumPivotPoints: " + pathFinder.getNumPivotPoints());
-
         if (numEnemies > 0) {
             enemy = new Enemy(0.0f, (width/2)*50.0f, pathFinder);
         }
-
-        buildLevel();
     }
 
     public Tile[][] getTiles() {
