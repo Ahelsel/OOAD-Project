@@ -75,12 +75,24 @@ public class GameScreen implements Screen {
         // do all the rendering here
         renderLevel();
         findPath();
-        // @TODO: render towers
+        renderTowers();
         renderEnemies();
         // @TODO: render projectiles
         // @TODO: render GUI/health bar
 
         batch.end();
+    }
+
+    public void renderTowers() {
+        // tower is located in assets/tower/Cannon.png
+        // the tile (gameHeight/2 + 1, 2) should have a tower
+        // make the tower size 50x50
+
+        TextureRegion towerTexture = new TextureRegion(new Texture(Gdx.files.internal("towers/Cannon.png")));
+        TextureRegion baseTexture = new TextureRegion(new Texture(Gdx.files.internal("towers/Tower.png")));
+        batch.draw(baseTexture, 2*50 + 5, (gameHeight/2 + 1)*50+5, 40, 40);
+        batch.draw(towerTexture, 2*50 + 10, (gameHeight/2 + 1)*50+10, 30, 30);
+
     }
 
     public void findPath() {
@@ -206,11 +218,11 @@ public class GameScreen implements Screen {
         Float deltaX = 0.0f;
         Float deltaY = 0.0f;
         if (enemy.getCurrentDirection() == Enemy.Direction.DOWN) {
-            deltaY = -100.0f / 60.0f;
+            deltaY = -10.0f / 60.0f;
         } else if (enemy.getCurrentDirection() == Enemy.Direction.UP) {
-            deltaY = 100.0f / 60.0f;
+            deltaY = 10.0f / 60.0f;
         } else if (enemy.getCurrentDirection() == Enemy.Direction.RIGHT) {
-            deltaX = 100.0f / 60.0f;
+            deltaX = 10.0f / 60.0f;
         }
         enemy.move(deltaX, deltaY);
     }
