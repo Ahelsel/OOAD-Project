@@ -1,4 +1,4 @@
-package org.ooad.project.level;
+package main.java.org.ooad.project.project.level;
 
 public class Tile {
 

@@ -1,6 +1,6 @@
-package org.ooad.project.level;
+package main.java.org.ooad.project.project.level;
 
-import org.ooad.project.entity.Enemy;
+import main.java.org.ooad.project.project.entity.Enemy;
 
 public class Level {
     private Tile[][] tiles;

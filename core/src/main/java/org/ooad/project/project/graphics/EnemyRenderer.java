@@ -1,4 +1,4 @@
-package org.ooad.project.graphics;
+package main.java.org.ooad.project.project.graphics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
-import org.ooad.project.entity.Enemy;
-import org.ooad.project.level.Level;
-import org.ooad.project.level.PivotPoint;
+import main.java.org.ooad.project.project.entity.Enemy;
+import main.java.org.ooad.project.project.level.Level;
+import main.java.org.ooad.project.project.level.PivotPoint;
 
 import java.util.Iterator;
 
