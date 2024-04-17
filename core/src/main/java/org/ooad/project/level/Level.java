@@ -72,13 +72,13 @@ public class Level {
             @Override
             public void run() {
                 if (numEnemies > 0) {
-                    enemies.add(new Enemy(0.0f, (width/2)*50.0f, pathFinder));
+                    enemies.add(new Enemy(0.0f, (width/2)*50.0f, copyPathFinder()));
                     numEnemies--;
                 } else {
                     cancel();
                 }
             }
-        }, 0, 5);
+        }, 0, 3);
     }
 
     public Tile[][] getTiles() {
@@ -223,6 +223,10 @@ public class Level {
         if (i > 5 && j == height/2 - 3) {
             tile.setWalkable(true);
         }
+    }
+
+    private PathFinder copyPathFinder() {
+        return new PathFinder(this);
     }
 
     public Integer getNumEnemies() {

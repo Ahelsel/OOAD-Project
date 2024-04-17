@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import org.ooad.project.level.Level;
 import org.ooad.project.graphics.LevelRenderer;
@@ -20,7 +21,7 @@ public class GameScreen implements Screen {
     private Level level;
     private BitmapFont font;
     private SpriteBatch batch;
-
+    private ShapeRenderer shapeRenderer;
     private boolean gameOver;
     private float gameOverTime;
 
@@ -30,7 +31,7 @@ public class GameScreen implements Screen {
         gameWidth = 9;
         gameHeight = 9;
 
-        level = Level.getInstance(gameWidth, gameHeight, 2);
+        level = Level.getInstance(gameWidth, gameHeight, 1);
 
         levelRenderer = new LevelRenderer(level);
         towerRenderer = new TowerRenderer(level);
@@ -41,6 +42,8 @@ public class GameScreen implements Screen {
 
         gameOver = false;
         gameOverTime = 0;
+
+        shapeRenderer = new ShapeRenderer();
     }
 
 
@@ -65,7 +68,15 @@ public class GameScreen implements Screen {
         }
 
         if (gameOver) {
+            float alpha = Math.min(1, (animationTime - gameOverTime) / 4);
+
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(0, 0, 0, alpha);
+            shapeRenderer.rect(0, 0, level.getWidth() * 50, level.getHeight() * 50);
+            shapeRenderer.end();
+
             batch.begin();
+            font.setColor(1, 1, 1, alpha);
             font.draw(batch, "Game Over", level.getWidth() * 25 - 50, level.getHeight() * 25);
             batch.end();
 
