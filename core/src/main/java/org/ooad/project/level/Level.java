@@ -1,6 +1,10 @@
 package org.ooad.project.level;
 
+import com.badlogic.gdx.utils.Timer;
 import org.ooad.project.entity.Enemy;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Level {
     private Tile[][] tiles;
@@ -14,7 +18,7 @@ public class Level {
     private Integer height;
     PathFinder pathFinder;
     private Integer numEnemies;
-    private Enemy enemy;
+    private List<Enemy> enemies;
 
     public static Level getInstance(Integer width, Integer height, Integer numEnemies) {
         if (instance == null) {
@@ -30,6 +34,7 @@ public class Level {
     public Level(Integer width, Integer height, Integer numEnemies) {
         this.width = width;
         this.height = height;
+        this.enemies = new ArrayList<>();
 
         tiles = new Tile[width][height];
 
@@ -59,9 +64,21 @@ public class Level {
 
     public void generateLevel() {
         pathFinder = new PathFinder(this);
-        if (numEnemies > 0) {
-            enemy = new Enemy(0.0f, (width/2)*50.0f, pathFinder);
-        }
+        spawnEnemies();
+    }
+
+    public void spawnEnemies() {
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                if (numEnemies > 0) {
+                    enemies.add(new Enemy(0.0f, (width/2)*50.0f, pathFinder));
+                    numEnemies--;
+                } else {
+                    cancel();
+                }
+            }
+        }, 0, 5);
     }
 
     public Tile[][] getTiles() {
@@ -81,8 +98,11 @@ public class Level {
         return width;
     }
 
-    public Enemy getEnemy() {
-        return enemy;
+    public List<Enemy> getEnemies() {
+        return enemies;
+    }
+    public void removeEnemy(Enemy enemy) {
+        enemies.remove(enemy);
     }
 
     public Integer getHeight() {
@@ -205,4 +225,7 @@ public class Level {
         }
     }
 
+    public Integer getNumEnemies() {
+        return numEnemies;
+    }
 }

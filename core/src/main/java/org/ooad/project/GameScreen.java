@@ -1,7 +1,10 @@
 package org.ooad.project;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import org.ooad.project.level.Level;
 import org.ooad.project.graphics.LevelRenderer;
@@ -15,6 +18,11 @@ public class GameScreen implements Screen {
     private TowerRenderer towerRenderer;
     private EnemyRenderer enemyRenderer;
     private Level level;
+    private BitmapFont font;
+    private SpriteBatch batch;
+
+    private boolean gameOver;
+    private float gameOverTime;
 
     private float animationTime = 0f;
 
@@ -22,12 +30,17 @@ public class GameScreen implements Screen {
         gameWidth = 9;
         gameHeight = 9;
 
-        level = Level.getInstance(gameWidth, gameHeight, 1);
+        level = Level.getInstance(gameWidth, gameHeight, 2);
 
         levelRenderer = new LevelRenderer(level);
         towerRenderer = new TowerRenderer(level);
         enemyRenderer = new EnemyRenderer(level);
 
+        font = new BitmapFont();
+        batch = new SpriteBatch();
+
+        gameOver = false;
+        gameOverTime = 0;
     }
 
 
@@ -42,6 +55,24 @@ public class GameScreen implements Screen {
         // @TODO: render projectiles
         // @TODO: render GUI/health bar
 
+        batch.begin();
+        font.draw(batch, "Enemies remaining: " + level.getNumEnemies(), 10, level.getHeight() * 50 - 10);
+        batch.end();
+
+        if (level.getNumEnemies() == 0 && level.getEnemies().isEmpty() && !gameOver) {
+            gameOver = true;
+            gameOverTime = animationTime;
+        }
+
+        if (gameOver) {
+            batch.begin();
+            font.draw(batch, "Game Over", level.getWidth() * 25 - 50, level.getHeight() * 25);
+            batch.end();
+
+            if (animationTime - gameOverTime > 3) {
+                Gdx.app.exit();
+            }
+        }
     }
 
     @Override

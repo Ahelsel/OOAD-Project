@@ -24,22 +24,25 @@ public class EnemyRenderer {
     }
 
     public void render(Float animationTime) {
-        Enemy enemy = level.getEnemy();
-        updateEnemyPosition(enemy);
-        findDirection(enemy);
         batch.begin();
-        TextureRegion currentFrame = entityAnimation.getKeyFrame(animationTime, true);
-        TextureRegion rotatedFrame = new TextureRegion(currentFrame);
-        if (enemy.getDirection() == Enemy.Direction.UP) {
-            rotatedFrame.setRegion(currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionHeight(), currentFrame.getRegionWidth());
-            batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 25, 25, 50, 50, 1f, 1f, 90f);
-        } else if (enemy.getDirection() == Enemy.Direction.DOWN) {
-            rotatedFrame.setRegion(currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionHeight(), currentFrame.getRegionWidth());
-            batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 25, 25, 50, 50, 1f, 1f, 270f);
-        } else {
-            batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 50, 50);
+        for (Enemy enemy : level.getEnemies()) {
+            updateEnemyPosition(enemy);
+            findDirection(enemy);
+            TextureRegion currentFrame = entityAnimation.getKeyFrame(animationTime, true);
+            TextureRegion rotatedFrame = new TextureRegion(currentFrame);
+            if (enemy.getDirection() == Enemy.Direction.UP) {
+                rotatedFrame.setRegion(currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionHeight(), currentFrame.getRegionWidth());
+                batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 25, 25, 50, 50, 1f, 1f, 90f);
+            } else if (enemy.getDirection() == Enemy.Direction.DOWN) {
+                rotatedFrame.setRegion(currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionHeight(), currentFrame.getRegionWidth());
+                batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 25, 25, 50, 50, 1f, 1f, 270f);
+            } else {
+                batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 50, 50);
+            }
+            if (enemy.getX() > level.getWidth() * 50 || enemy.getY() > level.getHeight() * 50) {
+                level.removeEnemy(enemy);
+            }
         }
-
         batch.end();
     }
 
@@ -51,14 +54,14 @@ public class EnemyRenderer {
             PivotPoint pivot = iterator.next();
             if (Math.abs(enemy.getX() - pivot.getX()) <= proximity && Math.abs(enemy.getY() - pivot.getY()) <= proximity) {
                 switch (pivot.getDirection()) {
-                    case Enemy.Direction.LEFT:
+                    case LEFT:
                         if (enemy.getDirection() == Enemy.Direction.DOWN) {
                             enemy.setDirection(Enemy.Direction.RIGHT);
                         } else {
                             enemy.setDirection(Enemy.Direction.UP);
                         }
                         break;
-                    case Enemy.Direction.RIGHT:
+                    case RIGHT:
                         if (enemy.getDirection() == Enemy.Direction.UP) {
                             enemy.setDirection(Enemy.Direction.RIGHT);
                         } else {
