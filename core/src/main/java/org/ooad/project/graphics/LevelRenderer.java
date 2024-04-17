@@ -1,10 +1,10 @@
-package main.java.org.ooad.project.project.graphics;
+package org.ooad.project.graphics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import main.java.org.ooad.project.project.level.Level;
-import main.java.org.ooad.project.project.level.Tile;
+import org.ooad.project.level.Level;
+import org.ooad.project.level.Tile;
 
 public class LevelRenderer {
     private Level level;

@@ -1,11 +1,11 @@
-package main.java.org.ooad.project.project.graphics;
+package org.ooad.project.graphics;
 
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import main.java.org.ooad.project.project.level.Level;
+import org.ooad.project.level.Level;
 
 public class TowerRenderer {
     private Level level;

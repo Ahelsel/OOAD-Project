@@ -1,12 +1,12 @@
-package main.java.org.ooad.project.project;
+package org.ooad.project;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
-import main.java.org.ooad.project.project.level.Level;
-import main.java.org.ooad.project.project.graphics.LevelRenderer;
-import main.java.org.ooad.project.project.graphics.TowerRenderer;
-import main.java.org.ooad.project.project.graphics.EnemyRenderer;
+import org.ooad.project.level.Level;
+import org.ooad.project.graphics.LevelRenderer;
+import org.ooad.project.graphics.TowerRenderer;
+import org.ooad.project.graphics.EnemyRenderer;
 
 public class GameScreen implements Screen {
     private Integer gameWidth = 9;

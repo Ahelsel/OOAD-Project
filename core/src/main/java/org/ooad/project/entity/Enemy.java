@@ -1,6 +1,6 @@
-package main.java.org.ooad.project.project.entity;
+package org.ooad.project.entity;
 
-import main.java.org.ooad.project.project.level.PathFinder;
+import org.ooad.project.level.PathFinder;
 
 public class Enemy {
     public enum Direction {

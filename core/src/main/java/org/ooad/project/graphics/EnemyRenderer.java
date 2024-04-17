@@ -1,4 +1,4 @@
-package main.java.org.ooad.project.project.graphics;
+package org.ooad.project.graphics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
-import main.java.org.ooad.project.project.entity.Enemy;
-import main.java.org.ooad.project.project.level.Level;
-import main.java.org.ooad.project.project.level.PivotPoint;
+import org.ooad.project.entity.Enemy;
+import org.ooad.project.level.Level;
+import org.ooad.project.level.PivotPoint;
 
 import java.util.Iterator;
 
@@ -51,14 +51,14 @@ public class EnemyRenderer {
             PivotPoint pivot = iterator.next();
             if (Math.abs(enemy.getX() - pivot.getX()) <= proximity && Math.abs(enemy.getY() - pivot.getY()) <= proximity) {
                 switch (pivot.getDirection()) {
-                    case LEFT:
+                    case Enemy.Direction.LEFT:
                         if (enemy.getDirection() == Enemy.Direction.DOWN) {
                             enemy.setDirection(Enemy.Direction.RIGHT);
                         } else {
                             enemy.setDirection(Enemy.Direction.UP);
                         }
                         break;
-                    case RIGHT:
+                    case Enemy.Direction.RIGHT:
                         if (enemy.getDirection() == Enemy.Direction.UP) {
                             enemy.setDirection(Enemy.Direction.RIGHT);
                         } else {

@@ -1,4 +1,4 @@
-package main.java.org.ooad.project.project;
+package org.ooad.project;
 
 import com.badlogic.gdx.Screen;
 
