@@ -14,16 +14,19 @@ import org.ooad.project.Game;
 public class StartScreen implements Screen {
     private SpriteBatch batch;
     private Texture startButtonTexture;
+    private Texture exitButtonTexture;
     private Rectangle startButtonBounds;
+    private Rectangle exitButtonBounds;
     private final Game game;
-
     public StartScreen(Game game) {
         this.game = game;
         batch = new SpriteBatch();
-        startButtonTexture = new Texture("grass.png");
-        startButtonBounds = new Rectangle(100, 100, 200, 100);
+        startButtonTexture = new Texture("buttons/PlayButton.png");
+        exitButtonTexture = new Texture("buttons/QuitButton.png");
+        // start button should be in the center of the screen, but shifted down a bit
+        startButtonBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 200, Gdx.graphics.getHeight() / 2 - 150, 200, 100);
+        exitButtonBounds  = new Rectangle(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 150, 200, 100);
     }
-
     @Override
     public void show() {
     }
@@ -34,6 +37,7 @@ public class StartScreen implements Screen {
 
         batch.begin();
         batch.draw(startButtonTexture, startButtonBounds.x, startButtonBounds.y, startButtonBounds.width, startButtonBounds.height);
+        batch.draw(exitButtonTexture, exitButtonBounds.x, exitButtonBounds.y, exitButtonBounds.width, exitButtonBounds.height);
         batch.end();
 
         if (Gdx.input.justTouched()) {
