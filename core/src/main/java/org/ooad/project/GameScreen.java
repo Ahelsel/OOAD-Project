@@ -45,6 +45,7 @@ public class GameScreen implements Screen {
         shapeRenderer = new ShapeRenderer();
 
         level.placeTower(level.getTile(2, (level.getHeight()/2) + 1));
+        level.placeTower(level.getTile(6, (level.getHeight()/2) - 2));
     }
 
 

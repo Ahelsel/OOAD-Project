@@ -11,22 +11,19 @@ import org.ooad.project.level.Level;
 public class TowerRenderer {
     private Level level;
     private SpriteBatch batch;
-    private Texture towerTexture;
-    private Texture baseTexture;
+    private TextureRegion towerTexture;
+    private TextureRegion baseTexture;
 
     public TowerRenderer(Level level) {
         this.level = level;
         this.batch = new SpriteBatch();
-        this.towerTexture = new Texture(Gdx.files.internal("towers/Cannon.png"));
-        this.baseTexture = new Texture(Gdx.files.internal("towers/Tower.png"));
+        this.towerTexture = new TextureRegion (new Texture(Gdx.files.internal("towers/Cannon.png")));
+        this.baseTexture = new TextureRegion (new Texture(Gdx.files.internal("towers/Tower.png")));
     }
 
     public void render() {
         batch.begin();
         for (Tower tower : level.getTowerManager().getTowers()) {
-            TextureRegion towerTexture = new TextureRegion(new Texture(Gdx.files.internal("towers/Cannon.png")));
-            TextureRegion baseTexture = new TextureRegion(new Texture(Gdx.files.internal("towers/Tower.png")));
-
             float towerX = tower.getTile().getXCoordinate().floatValue() + 5;
             float towerY = tower.getTile().getYCoordinate().floatValue() + 5;
 
@@ -45,9 +42,9 @@ public class TowerRenderer {
     }
 
     public void dispose() {
-        this.towerTexture.dispose();
-        this.baseTexture.dispose();
+        batch.dispose();
+        towerTexture.getTexture().dispose();
+        baseTexture.getTexture().dispose();
     }
-
 }
 

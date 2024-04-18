@@ -30,7 +30,6 @@ public class GameScreen implements Screen {
     private ShapeRenderer shapeRenderer;
     private boolean gameOver;
     private float gameOverTime;
-
     private float animationTime = 0f;
 
     public GameScreen() {
@@ -50,6 +49,9 @@ public class GameScreen implements Screen {
         gameOverTime = 0;
 
         shapeRenderer = new ShapeRenderer();
+
+        level.placeTower(level.getTile(2, (level.getHeight()/2) + 1));
+        level.placeTower(level.getTile(5, (level.getHeight()/2) + 2));
     }
 
     @Override
@@ -243,12 +245,33 @@ public class EnemyRenderer {
             } else {
                 batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 50, 50);
             }
-
+            updateTowerTargets(enemy);
             if (enemy.getX() > level.getWidth() * 50 || enemy.getY() > level.getHeight() * 50) {
                 iterator.remove();
             }
         }
         batch.end();
+    }
+
+    private void updateTowerTargets(Enemy enemy) {
+        for (Tower tower : level.getTowerManager().getTowers()) {
+            if (isEnemyInTowerRadius(tower, enemy)) {
+                if (tower.getTarget() == null) {
+                    tower.setTarget(enemy);
+                }
+            } else if (tower.getTarget() == enemy) {
+                tower.setTarget(null);
+            }
+        }
+    }
+
+    private boolean isEnemyInTowerRadius(Tower tower, Enemy enemy) {
+        int towerX = tower.getTile().getXIndex();
+        int towerY = tower.getTile().getYIndex();
+        int enemyX = (int) (enemy.getX() / 50);
+        int enemyY = (int) (enemy.getY() / 50);
+
+        return Math.abs(towerX - enemyX) <= 1 && Math.abs(towerY - enemyY) <= 1;
     }
 
     public void findDirection(Enemy enemy) {
@@ -358,30 +381,41 @@ public class LevelRenderer {
 public class TowerRenderer {
     private Level level;
     private SpriteBatch batch;
-    private Texture towerTexture;
-    private Texture baseTexture;
+    private TextureRegion towerTexture;
+    private TextureRegion baseTexture;
 
     public TowerRenderer(Level level) {
         this.level = level;
         this.batch = new SpriteBatch();
-        this.towerTexture = new Texture(Gdx.files.internal("towers/Cannon.png"));
-        this.baseTexture = new Texture(Gdx.files.internal("towers/Tower.png"));
+        this.towerTexture = new TextureRegion (new Texture(Gdx.files.internal("towers/Cannon.png")));
+        this.baseTexture = new TextureRegion (new Texture(Gdx.files.internal("towers/Tower.png")));
     }
 
     public void render() {
         batch.begin();
-        TextureRegion towerTexture = new TextureRegion(new Texture(Gdx.files.internal("towers/Cannon.png")));
-        TextureRegion baseTexture = new TextureRegion(new Texture(Gdx.files.internal("towers/Tower.png")));
-        batch.draw(baseTexture, 2*50 + 5, (level.getHeight()/2 + 1)*50+5, 40, 40);
-        batch.draw(towerTexture, 2*50 + 10, (level.getHeight()/2 + 1)*50+10, 30, 30);
+        for (Tower tower : level.getTowerManager().getTowers()) {
+            float towerX = tower.getTile().getXCoordinate().floatValue() + 5;
+            float towerY = tower.getTile().getYCoordinate().floatValue() + 5;
+
+            batch.draw(baseTexture, towerX, towerY, 20, 20, 40, 40, 1f, 1f, 0f);
+
+            float towerRotation = 0;
+            if (tower.getTarget() != null) {
+                float enemyX = tower.getTarget().getX() + 25;
+                float enemyY = tower.getTarget().getY() + 25;
+                towerRotation = (float) Math.toDegrees(Math.atan2(enemyY - (towerY + 20), enemyX - (towerX + 20))) - 90;
+            }
+
+            batch.draw(towerTexture, towerX + 5, towerY + 5, 15, 15, 30, 30, 1f, 1f, towerRotation);
+        }
         batch.end();
     }
 
     public void dispose() {
-        this.towerTexture.dispose();
-        this.baseTexture.dispose();
+        batch.dispose();
+        towerTexture.getTexture().dispose();
+        baseTexture.getTexture().dispose();
     }
-
 }
 // File: \items\Projectile.java
 
@@ -390,6 +424,65 @@ public class Projectile {
 // File: \items\Tower.java
 
 public class Tower {
+    Tile tile;
+    private Enemy target;
+
+    public Tower(Tile tile) {
+        this.tile = tile;
+        this.target = null;
+    }
+
+    public Tower() {
+        this.tile = null;
+        this.target = null;
+    }
+    public void setTile(Tile tile) {
+        this.tile = tile;
+    }
+    public Tile getTile() {
+        return tile;
+    }
+
+    public Enemy getTarget() {
+        return target;
+    }
+
+    public void setTarget(Enemy target) {
+        this.target = target;
+    }
+}
+// File: \items\TowerManager.java
+
+public class TowerManager {
+    private Level level;
+    private List<Tower> towers;
+
+    public TowerManager(Level level) {
+        this.level = level;
+        this.towers = new ArrayList<Tower>();
+    }
+
+    public void addTower(Tower tower) {
+        towers.add(tower);
+    }
+
+    public void removeTower(Tower tower) {
+        towers.remove(tower);
+    }
+
+    public List<Tower> getTowers() {
+        return towers;
+    }
+
+    public Tower getTowerAtTile(Tile tile) {
+        for (Tower tower : towers) {
+            if (tower.getTile().equals(tile)) {
+                return tower;
+            }
+        }
+        return null;
+    }
+
 }
 // File: \level\Level.java
 
@@ -406,6 +499,8 @@ public class Level {
     PathFinder pathFinder;
     private Integer numEnemies;
     private List<Enemy> enemies;
+
+    private TowerManager towerManager;
 
     public static Level getInstance(Integer width, Integer height, Integer numEnemies) {
         if (instance == null) {
@@ -444,6 +539,8 @@ public class Level {
                     tiles[i][j] = temp;
             }
         }
+
+        towerManager = new TowerManager(this);
 
         this.numEnemies = numEnemies;
         buildLevel();
@@ -617,6 +714,17 @@ public class Level {
 
     public Integer getNumEnemies() {
         return numEnemies;
+    }
+
+    public void placeTower(Tile tile) {
+        if (!tile.isWalkable() && towerManager.getTowerAtTile(tile) == null) {
+            Tower tower = new Tower(tile);
+            towerManager.addTower(tower);
+        }
+    }
+
+    public TowerManager getTowerManager() {
+        return towerManager;
     }
 }
 // File: \level\PathFinder.java
