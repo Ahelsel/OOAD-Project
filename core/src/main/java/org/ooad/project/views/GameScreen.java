@@ -134,4 +134,8 @@ public class GameScreen implements Screen {
         guiRenderer.dispose();
     }
 
+    public Level getLevel() {
+        return level;
+    }
+
 }
