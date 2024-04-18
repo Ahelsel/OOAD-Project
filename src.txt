@@ -25,6 +25,11 @@ public class GameScreen implements Screen {
     private TowerRenderer towerRenderer;
     private EnemyRenderer enemyRenderer;
     private Level level;
+    private BitmapFont font;
+    private SpriteBatch batch;
+    private ShapeRenderer shapeRenderer;
+    private boolean gameOver;
+    private float gameOverTime;
 
     private float animationTime = 0f;
 
@@ -32,12 +37,19 @@ public class GameScreen implements Screen {
         gameWidth = 9;
         gameHeight = 9;
 
-        level = Level.getInstance(gameWidth, gameHeight, 1);
+        level = Level.getInstance(gameWidth, gameHeight, 5);
 
         levelRenderer = new LevelRenderer(level);
         towerRenderer = new TowerRenderer(level);
         enemyRenderer = new EnemyRenderer(level);
 
+        font = new BitmapFont();
+        batch = new SpriteBatch();
+
+        gameOver = false;
+        gameOverTime = 0;
+
+        shapeRenderer = new ShapeRenderer();
     }
 
     @Override
@@ -51,6 +63,32 @@ public class GameScreen implements Screen {
         // @TODO: render projectiles
         // @TODO: render GUI/health bar
 
+        batch.begin();
+        font.draw(batch, "Enemies remaining: " + level.getNumEnemies(), 10, level.getHeight() * 50 - 10);
+        batch.end();
+
+        if (level.getNumEnemies() == 0 && level.getEnemies().isEmpty() && !gameOver) {
+            gameOver = true;
+            gameOverTime = animationTime;
+        }
+
+        if (gameOver) {
+            float alpha = Math.min(1, (animationTime - gameOverTime) / 4);
+
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(0, 0, 0, alpha);
+            shapeRenderer.rect(0, 0, level.getWidth() * 50, level.getHeight() * 50);
+            shapeRenderer.end();
+
+            batch.begin();
+            font.setColor(1, 1, 1, alpha);
+            font.draw(batch, "Game Over", level.getWidth() * 25 - 50, level.getHeight() * 25);
+            batch.end();
+
+            if (animationTime - gameOverTime > 3) {
+                Gdx.app.exit();
+            }
+        }
     }
 
     @Override
@@ -164,23 +202,52 @@ public class EnemyRenderer {
         loadEntityAnimation();
     }
 
-    public void render(Float animationTime) {
-        Enemy enemy = level.getEnemy();
-        updateEnemyPosition(enemy);
-        findDirection(enemy);
-        batch.begin();
-        TextureRegion currentFrame = entityAnimation.getKeyFrame(animationTime, true);
-        TextureRegion rotatedFrame = new TextureRegion(currentFrame);
-        if (enemy.getDirection() == Enemy.Direction.UP) {
-            rotatedFrame.setRegion(currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionHeight(), currentFrame.getRegionWidth());
-            batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 25, 25, 50, 50, 1f, 1f, 90f);
-        } else if (enemy.getDirection() == Enemy.Direction.DOWN) {
-            rotatedFrame.setRegion(currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionHeight(), currentFrame.getRegionWidth());
-            batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 25, 25, 50, 50, 1f, 1f, 270f);
-        } else {
-            batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 50, 50);
-        }
+//    public void render(Float animationTime) {
+//        batch.begin();
+//        for (Enemy enemy : level.getEnemies()) {
+//            updateEnemyPosition(enemy);
+//            findDirection(enemy);
+//            TextureRegion currentFrame = entityAnimation.getKeyFrame(animationTime, true);
+//            TextureRegion rotatedFrame = new TextureRegion(currentFrame);
+//            if (enemy.getDirection() == Enemy.Direction.UP) {
+//                rotatedFrame.setRegion(currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionHeight(), currentFrame.getRegionWidth());
+//                batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 25, 25, 50, 50, 1f, 1f, 90f);
+//            } else if (enemy.getDirection() == Enemy.Direction.DOWN) {
+//                rotatedFrame.setRegion(currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionHeight(), currentFrame.getRegionWidth());
+//                batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 25, 25, 50, 50, 1f, 1f, 270f);
+//            } else {
+//                batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 50, 50);
+//            }
+//            if (enemy.getX() > level.getWidth() * 50 || enemy.getY() > level.getHeight() * 50) {
+//                level.removeEnemy(enemy);
+//            }
+//        }
+//        batch.end();
+//    }
 
+    public void render(Float animationTime) {
+        batch.begin();
+        Iterator<Enemy> iterator = level.getEnemies().iterator();
+        while (iterator.hasNext()) {
+            Enemy enemy = iterator.next();
+            updateEnemyPosition(enemy);
+            findDirection(enemy);
+            TextureRegion currentFrame = entityAnimation.getKeyFrame(animationTime, true);
+            TextureRegion rotatedFrame = new TextureRegion(currentFrame);
+            if (enemy.getDirection() == Enemy.Direction.UP) {
+                rotatedFrame.setRegion(currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionHeight(), currentFrame.getRegionWidth());
+                batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 25, 25, 50, 50, 1f, 1f, 90f);
+            } else if (enemy.getDirection() == Enemy.Direction.DOWN) {
+                rotatedFrame.setRegion(currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionHeight(), currentFrame.getRegionWidth());
+                batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 25, 25, 50, 50, 1f, 1f, 270f);
+            } else {
+                batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 50, 50);
+            }
+
+            if (enemy.getX() > level.getWidth() * 50 || enemy.getY() > level.getHeight() * 50) {
+                iterator.remove();
+            }
+        }
         batch.end();
     }
 
@@ -192,14 +259,14 @@ public class EnemyRenderer {
             PivotPoint pivot = iterator.next();
             if (Math.abs(enemy.getX() - pivot.getX()) <= proximity && Math.abs(enemy.getY() - pivot.getY()) <= proximity) {
                 switch (pivot.getDirection()) {
-                    case Enemy.Direction.LEFT:
+                    case LEFT:
                         if (enemy.getDirection() == Enemy.Direction.DOWN) {
                             enemy.setDirection(Enemy.Direction.RIGHT);
                         } else {
                             enemy.setDirection(Enemy.Direction.UP);
                         }
                         break;
-                    case Enemy.Direction.RIGHT:
+                    case RIGHT:
                         if (enemy.getDirection() == Enemy.Direction.UP) {
                             enemy.setDirection(Enemy.Direction.RIGHT);
                         } else {
@@ -245,7 +312,12 @@ public class EnemyRenderer {
         enemy.move(deltaX, deltaY);
     }
 
-}// File: \graphics\LevelRenderer.java
+}// File: \graphics\GuiRenderer.java
+
+public class GuiRenderer {
+    // TODO: Implement guiRenderer
+}
+// File: \graphics\LevelRenderer.java
 
 public class LevelRenderer {
     private Level level;
@@ -333,7 +405,7 @@ public class Level {
     private Integer height;
     PathFinder pathFinder;
     private Integer numEnemies;
-    private Enemy enemy;
+    private List<Enemy> enemies;
 
     public static Level getInstance(Integer width, Integer height, Integer numEnemies) {
         if (instance == null) {
@@ -349,6 +421,7 @@ public class Level {
     public Level(Integer width, Integer height, Integer numEnemies) {
         this.width = width;
         this.height = height;
+        this.enemies = new ArrayList<>();
 
         tiles = new Tile[width][height];
 
@@ -378,9 +451,21 @@ public class Level {
 
     public void generateLevel() {
         pathFinder = new PathFinder(this);
-        if (numEnemies > 0) {
-            enemy = new Enemy(0.0f, (width/2)*50.0f, pathFinder);
-        }
+        spawnEnemies();
+    }
+
+    public void spawnEnemies() {
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                if (numEnemies > 0) {
+                    enemies.add(new Enemy(0.0f, (width/2)*50.0f, copyPathFinder()));
+                    numEnemies--;
+                } else {
+                    cancel();
+                }
+            }
+        }, 0, 3);
     }
 
     public Tile[][] getTiles() {
@@ -399,8 +484,11 @@ public class Level {
         return width;
     }
 
-    public Enemy getEnemy() {
-        return enemy;
+    public List<Enemy> getEnemies() {
+        return enemies;
+    }
+    public void removeEnemy(Enemy enemy) {
+        enemies.remove(enemy);
     }
 
     public Integer getHeight() {
@@ -523,6 +611,13 @@ public class Level {
         }
     }
 
+    private PathFinder copyPathFinder() {
+        return new PathFinder(this);
+    }
+
+    public Integer getNumEnemies() {
+        return numEnemies;
+    }
 }
 // File: \level\PathFinder.java
 

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import org.ooad.project.entity.Enemy;
+import org.ooad.project.items.Tower;
 import org.ooad.project.level.Level;
 import org.ooad.project.level.PivotPoint;
 
@@ -64,12 +65,33 @@ public class EnemyRenderer {
             } else {
                 batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 50, 50);
             }
-
+            updateTowerTargets(enemy);
             if (enemy.getX() > level.getWidth() * 50 || enemy.getY() > level.getHeight() * 50) {
                 iterator.remove();
             }
         }
         batch.end();
+    }
+
+    private void updateTowerTargets(Enemy enemy) {
+        for (Tower tower : level.getTowerManager().getTowers()) {
+            if (isEnemyInTowerRadius(tower, enemy)) {
+                if (tower.getTarget() == null) {
+                    tower.setTarget(enemy);
+                }
+            } else if (tower.getTarget() == enemy) {
+                tower.setTarget(null);
+            }
+        }
+    }
+
+    private boolean isEnemyInTowerRadius(Tower tower, Enemy enemy) {
+        int towerX = tower.getTile().getXIndex();
+        int towerY = tower.getTile().getYIndex();
+        int enemyX = (int) (enemy.getX() / 50);
+        int enemyY = (int) (enemy.getY() / 50);
+
+        return Math.abs(towerX - enemyX) <= 1 && Math.abs(towerY - enemyY) <= 1;
     }
 
     public void findDirection(Enemy enemy) {

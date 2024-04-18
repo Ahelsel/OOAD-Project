@@ -2,6 +2,8 @@ package org.ooad.project.level;
 
 import com.badlogic.gdx.utils.Timer;
 import org.ooad.project.entity.Enemy;
+import org.ooad.project.items.Tower;
+import org.ooad.project.items.TowerManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,8 @@ public class Level {
     PathFinder pathFinder;
     private Integer numEnemies;
     private List<Enemy> enemies;
+
+    private TowerManager towerManager;
 
     public static Level getInstance(Integer width, Integer height, Integer numEnemies) {
         if (instance == null) {
@@ -57,6 +61,8 @@ public class Level {
                     tiles[i][j] = temp;
             }
         }
+
+        towerManager = new TowerManager(this);
 
         this.numEnemies = numEnemies;
         buildLevel();
@@ -231,5 +237,16 @@ public class Level {
 
     public Integer getNumEnemies() {
         return numEnemies;
+    }
+
+    public void placeTower(Tile tile) {
+        if (!tile.isWalkable() && towerManager.getTowerAtTile(tile) == null) {
+            Tower tower = new Tower(tile);
+            towerManager.addTower(tower);
+        }
+    }
+
+    public TowerManager getTowerManager() {
+        return towerManager;
     }
 }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import org.ooad.project.items.Tower;
 import org.ooad.project.level.Level;
 
 public class TowerRenderer {
@@ -22,10 +23,24 @@ public class TowerRenderer {
 
     public void render() {
         batch.begin();
-        TextureRegion towerTexture = new TextureRegion(new Texture(Gdx.files.internal("towers/Cannon.png")));
-        TextureRegion baseTexture = new TextureRegion(new Texture(Gdx.files.internal("towers/Tower.png")));
-        batch.draw(baseTexture, 2*50 + 5, (level.getHeight()/2 + 1)*50+5, 40, 40);
-        batch.draw(towerTexture, 2*50 + 10, (level.getHeight()/2 + 1)*50+10, 30, 30);
+        for (Tower tower : level.getTowerManager().getTowers()) {
+            TextureRegion towerTexture = new TextureRegion(new Texture(Gdx.files.internal("towers/Cannon.png")));
+            TextureRegion baseTexture = new TextureRegion(new Texture(Gdx.files.internal("towers/Tower.png")));
+
+            float towerX = tower.getTile().getXCoordinate().floatValue() + 5;
+            float towerY = tower.getTile().getYCoordinate().floatValue() + 5;
+
+            batch.draw(baseTexture, towerX, towerY, 20, 20, 40, 40, 1f, 1f, 0f);
+
+            float towerRotation = 0;
+            if (tower.getTarget() != null) {
+                float enemyX = tower.getTarget().getX() + 25;
+                float enemyY = tower.getTarget().getY() + 25;
+                towerRotation = (float) Math.toDegrees(Math.atan2(enemyY - (towerY + 20), enemyX - (towerX + 20))) - 90;
+            }
+
+            batch.draw(towerTexture, towerX + 5, towerY + 5, 15, 15, 30, 30, 1f, 1f, towerRotation);
+        }
         batch.end();
     }
 
@@ -33,7 +48,6 @@ public class TowerRenderer {
         this.towerTexture.dispose();
         this.baseTexture.dispose();
     }
-
 
 }
 

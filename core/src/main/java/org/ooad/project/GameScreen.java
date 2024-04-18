@@ -24,14 +24,13 @@ public class GameScreen implements Screen {
     private ShapeRenderer shapeRenderer;
     private boolean gameOver;
     private float gameOverTime;
-
     private float animationTime = 0f;
 
     public GameScreen() {
         gameWidth = 9;
         gameHeight = 9;
 
-        level = Level.getInstance(gameWidth, gameHeight, 1);
+        level = Level.getInstance(gameWidth, gameHeight, 5);
 
         levelRenderer = new LevelRenderer(level);
         towerRenderer = new TowerRenderer(level);
@@ -44,6 +43,8 @@ public class GameScreen implements Screen {
         gameOverTime = 0;
 
         shapeRenderer = new ShapeRenderer();
+
+        level.placeTower(level.getTile(2, (level.getHeight()/2) + 1));
     }
 
 
