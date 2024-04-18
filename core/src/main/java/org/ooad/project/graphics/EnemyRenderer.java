@@ -17,8 +17,10 @@ public class EnemyRenderer {
     private Level level;
     private SpriteBatch batch;
     private Animation<TextureRegion> entityAnimation;
+    private Array<Texture> textures;
 
     public EnemyRenderer(Level level) {
+        textures = new Array<>();
         this.level = level;
         this.batch = new SpriteBatch();
         loadEntityAnimation();
@@ -104,8 +106,8 @@ public class EnemyRenderer {
 
     public void dispose() {
         batch.dispose();
-        for (TextureRegion region : entityAnimation.getKeyFrames()) {
-            region.getTexture().dispose();
+        for (Texture texture : textures) {
+            texture.dispose();
         }
     }
 
@@ -113,7 +115,9 @@ public class EnemyRenderer {
         Array<TextureRegion> frames = new Array<>();
         for (int i = 0; i < 17; i++) {
             String filename = "entityMove/move" + i + ".png";
-            TextureRegion frameTexture = new TextureRegion(new Texture(Gdx.files.internal(filename)));
+            Texture texture = new Texture(Gdx.files.internal(filename));
+            textures.add(texture);
+            TextureRegion frameTexture = new TextureRegion(texture);
             frames.add(new TextureRegion(frameTexture));
         }
         entityAnimation = new Animation<>(0.1f, frames);

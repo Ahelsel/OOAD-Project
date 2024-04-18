@@ -1,129 +1,18 @@
 // File: \Game.java
 
 public class Game extends com.badlogic.gdx.Game {
-	private Screen gameScreen;
+	private Screen startScreen;
 
 	@Override
 	public void create() {
-		// create the screen
-		gameScreen = new GameScreen();
-		setScreen(gameScreen);
+		startScreen = new StartScreen(this);
+		setScreen(startScreen);
 	}
 
 	@Override
 	public void dispose() {
-		gameScreen.dispose();
+		startScreen.dispose();
 	}
-
-}
-// File: \GameScreen.java
-
-public class GameScreen implements Screen {
-    private Integer gameWidth = 9;
-    private Integer gameHeight = 9;
-    private LevelRenderer levelRenderer;
-    private TowerRenderer towerRenderer;
-    private EnemyRenderer enemyRenderer;
-    private Level level;
-    private BitmapFont font;
-    private SpriteBatch batch;
-    private ShapeRenderer shapeRenderer;
-    private boolean gameOver;
-    private float gameOverTime;
-    private float animationTime = 0f;
-
-    public GameScreen() {
-        gameWidth = 9;
-        gameHeight = 9;
-
-        level = Level.getInstance(gameWidth, gameHeight, 5);
-
-        levelRenderer = new LevelRenderer(level);
-        towerRenderer = new TowerRenderer(level);
-        enemyRenderer = new EnemyRenderer(level);
-
-        font = new BitmapFont();
-        batch = new SpriteBatch();
-
-        gameOver = false;
-        gameOverTime = 0;
-
-        shapeRenderer = new ShapeRenderer();
-
-        level.placeTower(level.getTile(2, (level.getHeight()/2) + 1));
-        level.placeTower(level.getTile(5, (level.getHeight()/2) + 2));
-    }
-
-    @Override
-    public void render(float v) {
-        animationTime += v;
-        ScreenUtils.clear(Color.BLACK);
-
-        levelRenderer.render();
-        towerRenderer.render();
-        enemyRenderer.render(animationTime);
-        // @TODO: render projectiles
-        // @TODO: render GUI/health bar
-
-        batch.begin();
-        font.draw(batch, "Enemies remaining: " + level.getNumEnemies(), 10, level.getHeight() * 50 - 10);
-        batch.end();
-
-        if (level.getNumEnemies() == 0 && level.getEnemies().isEmpty() && !gameOver) {
-            gameOver = true;
-            gameOverTime = animationTime;
-        }
-
-        if (gameOver) {
-            float alpha = Math.min(1, (animationTime - gameOverTime) / 4);
-
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(0, 0, 0, alpha);
-            shapeRenderer.rect(0, 0, level.getWidth() * 50, level.getHeight() * 50);
-            shapeRenderer.end();
-
-            batch.begin();
-            font.setColor(1, 1, 1, alpha);
-            font.draw(batch, "Game Over", level.getWidth() * 25 - 50, level.getHeight() * 25);
-            batch.end();
-
-            if (animationTime - gameOverTime > 3) {
-                Gdx.app.exit();
-            }
-        }
-    }
-
-    @Override
-    public void show() {
-        // @TODO: show game
-    }
-
-    @Override
-    public void resize(int i, int i1) {
-        // @TODO: resize game
-    }
-
-    @Override
-    public void pause() {
-        // @TODO: pause game
-    }
-
-    @Override
-    public void resume() {
-        // @TODO: resume game
-    }
-
-    @Override
-    public void hide() {
-        // @TODO: hide game
-    }
-
-    @Override
-    public void dispose() {
-        levelRenderer.dispose();
-        towerRenderer.dispose();
-        enemyRenderer.dispose();
-    }
 
 }
 // File: \entity\Enemy.java
@@ -203,29 +92,6 @@ public class EnemyRenderer {
         this.batch = new SpriteBatch();
         loadEntityAnimation();
     }
-
-//    public void render(Float animationTime) {
-//        batch.begin();
-//        for (Enemy enemy : level.getEnemies()) {
-//            updateEnemyPosition(enemy);
-//            findDirection(enemy);
-//            TextureRegion currentFrame = entityAnimation.getKeyFrame(animationTime, true);
-//            TextureRegion rotatedFrame = new TextureRegion(currentFrame);
-//            if (enemy.getDirection() == Enemy.Direction.UP) {
-//                rotatedFrame.setRegion(currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionHeight(), currentFrame.getRegionWidth());
-//                batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 25, 25, 50, 50, 1f, 1f, 90f);
-//            } else if (enemy.getDirection() == Enemy.Direction.DOWN) {
-//                rotatedFrame.setRegion(currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionHeight(), currentFrame.getRegionWidth());
-//                batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 25, 25, 50, 50, 1f, 1f, 270f);
-//            } else {
-//                batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 50, 50);
-//            }
-//            if (enemy.getX() > level.getWidth() * 50 || enemy.getY() > level.getHeight() * 50) {
-//                level.removeEnemy(enemy);
-//            }
-//        }
-//        batch.end();
-//    }
 
     public void render(Float animationTime) {
         batch.begin();
@@ -338,7 +204,41 @@ public class EnemyRenderer {
 }// File: \graphics\GuiRenderer.java
 
 public class GuiRenderer {
-    // TODO: Implement guiRenderer
+    private BitmapFont font;
+    private SpriteBatch batch;
+    private ShapeRenderer shapeRenderer;
+    private Level level;
+
+    public GuiRenderer(Level level) {
+        font = new BitmapFont();
+        batch = new SpriteBatch();
+        this.level = level;
+        shapeRenderer = new ShapeRenderer();
+    }
+
+    public void renderEnemiesRemaining() {
+        batch.begin();
+        font.draw(batch, "Enemies remaining: " + level.getNumEnemies(), 10, level.getHeight() * 50 - 10);
+        batch.end();
+    }
+
+    public void renderGameOver(float alpha) {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(0, 0, 0, alpha);
+        shapeRenderer.rect(0, 0, level.getWidth() * 50, level.getHeight() * 50);
+        shapeRenderer.end();
+
+        batch.begin();
+        font.setColor(1, 1, 1, alpha);
+        font.draw(batch, "Game Over", level.getWidth() * 25 - 50, level.getHeight() * 25);
+        batch.end();
+    }
+
+    public void dispose() {
+        font.dispose();
+        batch.dispose();
+    }
+
 }
 // File: \graphics\LevelRenderer.java
 
@@ -562,7 +462,7 @@ public class Level {
                     cancel();
                 }
             }
-        }, 0, 3);
+        }, 0, 2);
     }
 
     public Tile[][] getTiles() {
@@ -908,4 +808,276 @@ public class Tile {
         return previousTile;
     }
 
+}
+// File: \views\GameScreen.java
+
+public class GameScreen implements Screen {
+    private Integer gameWidth = 9;
+    private Integer gameHeight = 9;
+    private LevelRenderer levelRenderer;
+    private TowerRenderer towerRenderer;
+    private EnemyRenderer enemyRenderer;
+    private GuiRenderer guiRenderer;
+    private Boolean isPaused;
+    private Level level;
+    private boolean gameOver;
+    private float gameOverTime;
+    private float animationTime = 0f;
+
+    private final Game game;
+
+    public GameScreen(Game game) {
+        this.game = game;
+        isPaused = false;
+
+        gameOver = false;
+        gameOverTime = 0;
+
+        gameWidth = 9;
+        gameHeight = 9;
+
+        level = Level.getInstance(gameWidth, gameHeight, 5);
+
+        levelRenderer = new LevelRenderer(level);
+        towerRenderer = new TowerRenderer(level);
+        enemyRenderer = new EnemyRenderer(level);
+        guiRenderer   = new GuiRenderer(level);
+
+        level.placeTower(level.getTile(2, (level.getHeight()/2) + 1));
+        level.placeTower(level.getTile(6, (level.getHeight()/2) - 2));
+    }
+
+    @Override
+    public void render(float v) {
+        if (!isPaused) {
+            animationTime += v;
+            ScreenUtils.clear(Color.BLACK);
+
+            levelRenderer.render();
+            towerRenderer.render();
+            enemyRenderer.render(animationTime);
+            // @TODO: render projectiles
+            guiRenderer.renderEnemiesRemaining();
+
+            if (level.getNumEnemies() == 0 && level.getEnemies().isEmpty() && !gameOver) {
+                gameOver = true;
+                gameOverTime = animationTime;
+            }
+
+            if (gameOver) {
+                float alpha = Math.min(1, (animationTime - gameOverTime) / 4);
+                if (animationTime - gameOverTime > 3) {
+                    game.setScreen(new StartScreen(game));
+                    dispose();
+                } else {
+                    guiRenderer.renderGameOver(alpha);
+                }
+            }
+
+        }
+    }
+
+    @Override
+    public void show() {
+        Gdx.input.setInputProcessor(new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+                if (keycode == Input.Keys.ESCAPE) {
+                    if (!isPaused) {
+                        pause();
+                        setIsPaused(true);
+                    }
+                }
+                return true;
+            }
+        });
+    }
+
+    public void setIsPaused(Boolean isPaused) {
+        this.isPaused = isPaused;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    @Override
+    public void pause() {
+        game.setScreen(new PauseScreen(this));
+    }
+
+    @Override
+    public void resume() {
+        game.setScreen(this);
+    }
+
+    @Override
+    public void hide() {
+        // @TODO: hide game
+    }
+
+    @Override
+    public void resize(int i, int i1) {
+        // @TODO: resize game
+    }
+
+    @Override
+    public void dispose() {
+        levelRenderer.dispose();
+        towerRenderer.dispose();
+        enemyRenderer.dispose();
+        guiRenderer.dispose();
+    }
+
+}
+// File: \views\PauseScreen.java
+
+public class PauseScreen implements Screen {
+    private final GameScreen gameScreen;
+    private final SpriteBatch batch;
+    private final BitmapFont font;
+    private final Rectangle resumeButtonBounds;
+    private final Rectangle exitToMenuButtonBounds;
+    private final Rectangle exitToDesktopButtonBounds;
+
+    public PauseScreen(GameScreen gameScreen) {
+        this.gameScreen = gameScreen;
+        batch = new SpriteBatch();
+        font = new BitmapFont();
+        resumeButtonBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 2 + 50, 200, 50);
+        exitToMenuButtonBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 2 - 25, 200, 50);
+        exitToDesktopButtonBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 2 - 100, 200, 50);
+    }
+
+    @Override
+    public void show() {
+        Gdx.input.setInputProcessor(new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+                if (keycode == Input.Keys.ESCAPE) {
+                    gameScreen.resume();
+                    gameScreen.setIsPaused(false);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                Vector2 touchPoint = new Vector2(screenX, screenY);
+                touchPoint.set(touchPoint.x, Gdx.graphics.getHeight() - touchPoint.y);
+
+                if (resumeButtonBounds.contains(touchPoint)) {
+                    gameScreen.resume();
+                    gameScreen.setIsPaused(false);
+                } else if (exitToMenuButtonBounds.contains(touchPoint)) {
+                    gameScreen.getGame().setScreen(new StartScreen(gameScreen.getGame()));
+                    gameScreen.dispose();
+                } else if (exitToDesktopButtonBounds.contains(touchPoint)) {
+                    Gdx.app.exit();
+                }
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public void render(float delta) {
+        ScreenUtils.clear(0, 0, 0, 0.5f);
+
+        batch.begin();
+        font.draw(batch, "Resume", resumeButtonBounds.x + 50, resumeButtonBounds.y + 30);
+        font.draw(batch, "Exit to Menu", exitToMenuButtonBounds.x + 30, exitToMenuButtonBounds.y + 30);
+        font.draw(batch, "Exit to Desktop", exitToDesktopButtonBounds.x + 10, exitToDesktopButtonBounds.y + 30);
+        batch.end();
+    }
+
+    @Override
+    public void resize(int i, int i1) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void dispose() {
+        batch.dispose();
+        font.dispose();
+    }
+}
+// File: \views\StartScreen.java
+
+public class StartScreen implements Screen {
+    private SpriteBatch batch;
+    private Texture startButtonTexture;
+    private Rectangle startButtonBounds;
+    private final Game game;
+
+    public StartScreen(Game game) {
+        this.game = game;
+        batch = new SpriteBatch();
+        startButtonTexture = new Texture("grass.png");
+        startButtonBounds = new Rectangle(100, 100, 200, 100);
+    }
+
+    @Override
+    public void show() {
+    }
+
+    @Override
+    public void render(float delta) {
+        ScreenUtils.clear(Color.WHITE);
+
+        batch.begin();
+        batch.draw(startButtonTexture, startButtonBounds.x, startButtonBounds.y, startButtonBounds.width, startButtonBounds.height);
+        batch.end();
+
+        if (Gdx.input.justTouched()) {
+            Vector2 touchPoint = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+            touchPoint.set(touchPoint.x, Gdx.graphics.getHeight() - touchPoint.y);
+
+            if (startButtonBounds.contains(touchPoint)) {
+                game.setScreen(new GameScreen(game));
+                dispose();
+            }
+        }
+    }
+
+    @Override
+    public void resize(int i, int i1) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void dispose() {
+        batch.dispose();
+        startButtonTexture.dispose();
+    }
 }

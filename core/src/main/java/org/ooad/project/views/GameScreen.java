@@ -131,6 +131,7 @@ public class GameScreen implements Screen {
         levelRenderer.dispose();
         towerRenderer.dispose();
         enemyRenderer.dispose();
+        guiRenderer.dispose();
     }
 
 }
