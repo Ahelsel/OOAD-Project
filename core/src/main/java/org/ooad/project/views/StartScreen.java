@@ -15,6 +15,7 @@ public class StartScreen implements Screen {
     private SpriteBatch batch;
     private Texture startButtonTexture;
     private Texture exitButtonTexture;
+    private Texture backgroundTexture;
     private Rectangle startButtonBounds;
     private Rectangle exitButtonBounds;
     private Texture logoTexture;
@@ -26,8 +27,9 @@ public class StartScreen implements Screen {
         logoTexture = new Texture("logo.png");
         startButtonTexture = new Texture("buttons/PlayButton.png");
         exitButtonTexture = new Texture("buttons/QuitButton.png");
+        backgroundTexture = new Texture("grass.png");
         // start button should be in the center of the screen, but shifted down a bit
-        logoBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 200, Gdx.graphics.getHeight() / 2 - 150, 400, 400);
+        logoBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 200, Gdx.graphics.getHeight() / 2 - 175, 400, 400);
         startButtonBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 200, Gdx.graphics.getHeight() / 2 - 150, 200, 100);
         exitButtonBounds  = new Rectangle(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 150, 200, 100);
     }
@@ -40,6 +42,12 @@ public class StartScreen implements Screen {
         ScreenUtils.clear(Color.WHITE);
 
         batch.begin();
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                batch.draw(backgroundTexture, i * 50, j * 50, 50, 50);
+            }
+        }
+
         batch.draw(logoTexture, logoBounds.x, logoBounds.y, logoBounds.width, logoBounds.height);
         batch.draw(startButtonTexture, startButtonBounds.x, startButtonBounds.y, startButtonBounds.width, startButtonBounds.height);
         batch.draw(exitButtonTexture, exitButtonBounds.x, exitButtonBounds.y, exitButtonBounds.width, exitButtonBounds.height);
@@ -52,6 +60,10 @@ public class StartScreen implements Screen {
             if (startButtonBounds.contains(touchPoint)) {
                 game.setScreen(new GameScreen(game));
                 dispose();
+            }
+
+            if (exitButtonBounds.contains(touchPoint)) {
+                Gdx.app.exit();
             }
         }
     }
