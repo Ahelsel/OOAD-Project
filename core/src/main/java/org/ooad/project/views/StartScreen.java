@@ -17,13 +17,17 @@ public class StartScreen implements Screen {
     private Texture exitButtonTexture;
     private Rectangle startButtonBounds;
     private Rectangle exitButtonBounds;
+    private Texture logoTexture;
+    private Rectangle logoBounds;
     private final Game game;
     public StartScreen(Game game) {
         this.game = game;
         batch = new SpriteBatch();
+        logoTexture = new Texture("logo.png");
         startButtonTexture = new Texture("buttons/PlayButton.png");
         exitButtonTexture = new Texture("buttons/QuitButton.png");
         // start button should be in the center of the screen, but shifted down a bit
+        logoBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 200, Gdx.graphics.getHeight() / 2 - 150, 400, 400);
         startButtonBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 200, Gdx.graphics.getHeight() / 2 - 150, 200, 100);
         exitButtonBounds  = new Rectangle(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 150, 200, 100);
     }
@@ -36,6 +40,7 @@ public class StartScreen implements Screen {
         ScreenUtils.clear(Color.WHITE);
 
         batch.begin();
+        batch.draw(logoTexture, logoBounds.x, logoBounds.y, logoBounds.width, logoBounds.height);
         batch.draw(startButtonTexture, startButtonBounds.x, startButtonBounds.y, startButtonBounds.width, startButtonBounds.height);
         batch.draw(exitButtonTexture, exitButtonBounds.x, exitButtonBounds.y, exitButtonBounds.width, exitButtonBounds.height);
         batch.end();
