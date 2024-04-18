@@ -24,29 +24,6 @@ public class EnemyRenderer {
         loadEntityAnimation();
     }
 
-//    public void render(Float animationTime) {
-//        batch.begin();
-//        for (Enemy enemy : level.getEnemies()) {
-//            updateEnemyPosition(enemy);
-//            findDirection(enemy);
-//            TextureRegion currentFrame = entityAnimation.getKeyFrame(animationTime, true);
-//            TextureRegion rotatedFrame = new TextureRegion(currentFrame);
-//            if (enemy.getDirection() == Enemy.Direction.UP) {
-//                rotatedFrame.setRegion(currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionHeight(), currentFrame.getRegionWidth());
-//                batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 25, 25, 50, 50, 1f, 1f, 90f);
-//            } else if (enemy.getDirection() == Enemy.Direction.DOWN) {
-//                rotatedFrame.setRegion(currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionHeight(), currentFrame.getRegionWidth());
-//                batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 25, 25, 50, 50, 1f, 1f, 270f);
-//            } else {
-//                batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 50, 50);
-//            }
-//            if (enemy.getX() > level.getWidth() * 50 || enemy.getY() > level.getHeight() * 50) {
-//                level.removeEnemy(enemy);
-//            }
-//        }
-//        batch.end();
-//    }
-
     public void render(Float animationTime) {
         batch.begin();
         Iterator<Enemy> iterator = level.getEnemies().iterator();
