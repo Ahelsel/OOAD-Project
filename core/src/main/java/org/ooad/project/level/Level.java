@@ -249,4 +249,8 @@ public class Level {
     public TowerManager getTowerManager() {
         return towerManager;
     }
+
+    public void resetLevel() {
+        instance = null;
+    }
 }

@@ -56,6 +56,7 @@ public class GameScreen implements Screen {
     public void render(float v) {
         if (!isPaused) {
             animationTime += v;
+
             ScreenUtils.clear(Color.BLACK);
 
             levelRenderer.render();
@@ -72,13 +73,13 @@ public class GameScreen implements Screen {
             if (gameOver) {
                 float alpha = Math.min(1, (animationTime - gameOverTime) / 4);
                 if (animationTime - gameOverTime > 3) {
-                    game.setScreen(new StartScreen(game));
+                    resetGame();
+                    getGame().setScreen(new StartScreen(game));
                     dispose();
                 } else {
                     guiRenderer.renderGameOver(alpha);
                 }
             }
-
         }
     }
 
@@ -136,6 +137,19 @@ public class GameScreen implements Screen {
 
     public Level getLevel() {
         return level;
+    }
+
+    public void resetGame() {
+        level.resetLevel();
+        level = Level.getInstance(gameWidth, gameHeight, 5);
+        levelRenderer = new LevelRenderer(level);
+        towerRenderer = new TowerRenderer(level);
+        enemyRenderer = new EnemyRenderer(level);
+        guiRenderer   = new GuiRenderer(level);
+        isPaused = false;
+        gameOver = false;
+        gameOverTime = 0f;
+        animationTime = 0f;
     }
 
 }

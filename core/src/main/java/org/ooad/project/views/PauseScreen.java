@@ -56,8 +56,10 @@ public class PauseScreen implements Screen {
                     gameScreen.resume();
                     gameScreen.setIsPaused(false);
                 } else if (exitToMenuButtonBounds.contains(touchPoint)) {
+                    gameScreen.resetGame();
                     gameScreen.getGame().setScreen(new StartScreen(gameScreen.getGame()));
-                    gameScreen.dispose();
+                    dispose();
+
                 }
                 return true;
             }

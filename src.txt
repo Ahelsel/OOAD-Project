@@ -86,8 +86,10 @@ public class EnemyRenderer {
     private Level level;
     private SpriteBatch batch;
     private Animation<TextureRegion> entityAnimation;
+    private Array<Texture> textures;
 
     public EnemyRenderer(Level level) {
+        textures = new Array<>();
         this.level = level;
         this.batch = new SpriteBatch();
         loadEntityAnimation();
@@ -173,8 +175,8 @@ public class EnemyRenderer {
 
     public void dispose() {
         batch.dispose();
-        for (TextureRegion region : entityAnimation.getKeyFrames()) {
-            region.getTexture().dispose();
+        for (Texture texture : textures) {
+            texture.dispose();
         }
     }
 
@@ -182,7 +184,9 @@ public class EnemyRenderer {
         Array<TextureRegion> frames = new Array<>();
         for (int i = 0; i < 17; i++) {
             String filename = "entityMove/move" + i + ".png";
-            TextureRegion frameTexture = new TextureRegion(new Texture(Gdx.files.internal(filename)));
+            Texture texture = new Texture(Gdx.files.internal(filename));
+            textures.add(texture);
+            TextureRegion frameTexture = new TextureRegion(texture);
             frames.add(new TextureRegion(frameTexture));
         }
         entityAnimation = new Animation<>(0.1f, frames);
@@ -929,6 +933,10 @@ public class GameScreen implements Screen {
         guiRenderer.dispose();
     }
 
+    public Level getLevel() {
+        return level;
+    }
+
 }
 // File: \views\PauseScreen.java
 
@@ -936,17 +944,24 @@ public class PauseScreen implements Screen {
     private final GameScreen gameScreen;
     private final SpriteBatch batch;
     private final BitmapFont font;
+    private Texture exitButtonTexture;
+    private Texture playButtonTexture;
+    private Texture grassTexture;
+    private Texture pathTexture;
+
     private final Rectangle resumeButtonBounds;
     private final Rectangle exitToMenuButtonBounds;
-    private final Rectangle exitToDesktopButtonBounds;
 
     public PauseScreen(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
         batch = new SpriteBatch();
         font = new BitmapFont();
-        resumeButtonBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 2 + 50, 200, 50);
-        exitToMenuButtonBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 2 - 25, 200, 50);
-        exitToDesktopButtonBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 2 - 100, 200, 50);
+        resumeButtonBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 2, 200, 100);
+        exitToMenuButtonBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 2 - 100, 200, 100);
+        playButtonTexture = new Texture("buttons/PlayButton.png");
+        exitButtonTexture = new Texture("buttons/QuitButton.png");
+        grassTexture = new Texture("grass.png");
+        pathTexture = new Texture("path.png");
     }
 
     @Override
@@ -972,8 +987,6 @@ public class PauseScreen implements Screen {
                 } else if (exitToMenuButtonBounds.contains(touchPoint)) {
                     gameScreen.getGame().setScreen(new StartScreen(gameScreen.getGame()));
                     gameScreen.dispose();
-                } else if (exitToDesktopButtonBounds.contains(touchPoint)) {
-                    Gdx.app.exit();
                 }
                 return true;
             }
@@ -985,9 +998,19 @@ public class PauseScreen implements Screen {
         ScreenUtils.clear(0, 0, 0, 0.5f);
 
         batch.begin();
-        font.draw(batch, "Resume", resumeButtonBounds.x + 50, resumeButtonBounds.y + 30);
-        font.draw(batch, "Exit to Menu", exitToMenuButtonBounds.x + 30, exitToMenuButtonBounds.y + 30);
-        font.draw(batch, "Exit to Desktop", exitToDesktopButtonBounds.x + 10, exitToDesktopButtonBounds.y + 30);
+        // iterate over level and draw grass or path depending on if tile is walkable or not
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (gameScreen.getLevel().getTile(i, j).isWalkable()) {
+                    batch.draw(pathTexture, i * 50, j * 50, 50, 50);
+                } else {
+                    batch.draw(grassTexture, i * 50, j * 50, 50, 50);
+                }
+            }
+        }
+
+        batch.draw(playButtonTexture, resumeButtonBounds.x, resumeButtonBounds.y, resumeButtonBounds.width, resumeButtonBounds.height);
+        batch.draw(exitButtonTexture, exitToMenuButtonBounds.x, exitToMenuButtonBounds.y, exitToMenuButtonBounds.width, exitToMenuButtonBounds.height);
         batch.end();
     }
 
@@ -1022,16 +1045,25 @@ public class PauseScreen implements Screen {
 public class StartScreen implements Screen {
     private SpriteBatch batch;
     private Texture startButtonTexture;
+    private Texture exitButtonTexture;
+    private Texture backgroundTexture;
     private Rectangle startButtonBounds;
+    private Rectangle exitButtonBounds;
+    private Texture logoTexture;
+    private Rectangle logoBounds;
     private final Game game;
-
     public StartScreen(Game game) {
         this.game = game;
         batch = new SpriteBatch();
-        startButtonTexture = new Texture("grass.png");
-        startButtonBounds = new Rectangle(100, 100, 200, 100);
+        logoTexture = new Texture("logo.png");
+        startButtonTexture = new Texture("buttons/PlayButton.png");
+        exitButtonTexture = new Texture("buttons/QuitButton.png");
+        backgroundTexture = new Texture("grass.png");
+        // start button should be in the center of the screen, but shifted down a bit
+        logoBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 200, Gdx.graphics.getHeight() / 2 - 175, 400, 400);
+        startButtonBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 200, Gdx.graphics.getHeight() / 2 - 150, 200, 100);
+        exitButtonBounds  = new Rectangle(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 150, 200, 100);
     }
-
     @Override
     public void show() {
     }
@@ -1041,7 +1073,15 @@ public class StartScreen implements Screen {
         ScreenUtils.clear(Color.WHITE);
 
         batch.begin();
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                batch.draw(backgroundTexture, i * 50, j * 50, 50, 50);
+            }
+        }
+
+        batch.draw(logoTexture, logoBounds.x, logoBounds.y, logoBounds.width, logoBounds.height);
         batch.draw(startButtonTexture, startButtonBounds.x, startButtonBounds.y, startButtonBounds.width, startButtonBounds.height);
+        batch.draw(exitButtonTexture, exitButtonBounds.x, exitButtonBounds.y, exitButtonBounds.width, exitButtonBounds.height);
         batch.end();
 
         if (Gdx.input.justTouched()) {
@@ -1051,6 +1091,10 @@ public class StartScreen implements Screen {
             if (startButtonBounds.contains(touchPoint)) {
                 game.setScreen(new GameScreen(game));
                 dispose();
+            }
+
+            if (exitButtonBounds.contains(touchPoint)) {
+                Gdx.app.exit();
             }
         }
     }
