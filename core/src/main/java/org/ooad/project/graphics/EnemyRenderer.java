@@ -65,12 +65,14 @@ public class EnemyRenderer {
     }
 
     private boolean isEnemyInTowerRadius(Tower tower, Enemy enemy) {
-        int towerX = tower.getTile().getXIndex();
-        int towerY = tower.getTile().getYIndex();
-        int enemyX = (int) (enemy.getX() / 50);
-        int enemyY = (int) (enemy.getY() / 50);
+        float towerX = tower.getTile().getXIndex();
+        float towerY = tower.getTile().getYIndex();
+        float enemyX = enemy.getX() / 50f;
+        float enemyY = enemy.getY() / 50f;
 
-        return Math.abs(towerX - enemyX) <= 1 && Math.abs(towerY - enemyY) <= 1;
+        Boolean returnValue = Math.abs(towerX - enemyX) <= 1 && Math.abs(towerY - enemyY) <= 1;
+
+        return Math.abs(towerX - enemyX) <= 1.5f && Math.abs(towerY - enemyY) <= 1.5f;
     }
 
     public void findDirection(Enemy enemy) {
