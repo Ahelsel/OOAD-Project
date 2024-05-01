@@ -82,4 +82,22 @@ public class EnemyTest {
         enemy.setY(5.0f);
         assertEquals(5.0f, enemy.getY(), 0.01);
     }
+
+    @Test
+    public void testSetMovementStrategy() {
+        PathFinder mockPathFinder = mock(PathFinder.class);
+        Enemy enemy = new Enemy(0.0f, 0.0f, mockPathFinder, mockMovementStrategy);
+
+        MovementStrategy newMovementStrategy = mock(DefaultMovementStrategy.class);
+        enemy.setMovementStrategy(newMovementStrategy);
+        assertEquals(newMovementStrategy, enemy.getMovementStrategy());
+    }
+
+    @Test
+    public void testGetMovementStrategy() {
+        PathFinder mockPathFinder = mock(PathFinder.class);
+        Enemy enemy = new Enemy(0.0f, 0.0f, mockPathFinder, mockMovementStrategy);
+
+        assertEquals(mockMovementStrategy, enemy.getMovementStrategy());
+    }
 }
