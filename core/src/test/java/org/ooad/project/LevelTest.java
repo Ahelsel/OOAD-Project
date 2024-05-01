@@ -2,6 +2,7 @@ package org.ooad.project;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import org.ooad.project.level.Level;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -18,19 +19,19 @@ public class LevelTest {
 
     @BeforeClass
     public static void setUpClass() {
-        //Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        //config.setForegroundFPS(60);
-        //config.setTitle("OOAD-Project");
+        Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+        config.setForegroundFPS(60);
+        config.setTitle("OOAD-Project");
 
         // the tiles are 50px in size, and the level is 9x9, so we do this
         // so that there is no filler/black space around the level when the window is rendered
-        //config.setWindowedMode(50*9, 50*9);
-        //config.setResizable(false);
+        config.setWindowedMode(50*9, 50*9);
+        config.setResizable(false);
 
         level = new Level(width, height, 1);
 
 
-        //new Lwjgl3Application(new Game(), config);
+        new Lwjgl3Application(new Game(), config);
 
     }
 
