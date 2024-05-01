@@ -1,4 +1,4 @@
-package org.ooad.project;
+package org.ooad.project.level;
 
 import org.junit.Test;
 import org.ooad.project.level.Level;
@@ -29,5 +29,13 @@ public class PathFinderTest {
         verify(mockLevel, times(2)).getTiles();
         verify(mockLevel, times(9)).isLeftTurn(any(Tile.class));
         verify(mockLevel, times(9)).isRightTurn(any(Tile.class));
+    }
+
+    @Test
+    public void testGetPivotPoints() {
+        Level mockLevel = mock(Level.class);
+        PathFinder pathFinder = new PathFinder(mockLevel);
+
+        pathFinder.getPivotPoints();
     }
 }

@@ -91,4 +91,5 @@ public class Tile {
         this.previousTile = previousTile;
     }
 
+    public boolean isFirstTile() { return isFirstTile; }
 }

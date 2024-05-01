@@ -1,4 +1,4 @@
-package org.ooad.project;
+package org.ooad.project.items;
 
 import org.junit.Test;
 import org.ooad.project.entity.Enemy;

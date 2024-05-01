@@ -1,4 +1,4 @@
-package org.ooad.project;
+package org.ooad.project.level;
 
 import org.junit.Test;
 import org.ooad.project.level.Tile;

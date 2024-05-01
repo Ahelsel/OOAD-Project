@@ -1,13 +1,177 @@
 package org.ooad.project.level;
 
 import com.badlogic.gdx.utils.Timer;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.ooad.project.entity.Enemy;
+import org.ooad.project.level.Level;
+import org.ooad.project.level.Tile;
 import org.ooad.project.items.Tower;
 import org.ooad.project.items.TowerManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
+
+public class LevelTest {
+    @Test
+    public void testGetTiles() {
+        Level level = new Level(10, 10, 10);
+        Tile[][] tiles = level.getTiles();
+        assertEquals(10, tiles.length);
+        assertEquals(10, tiles[0].length);
+    }
+
+    @Test
+    public void testGetTile() {
+        Level level = new Level(10, 10, 10);
+        Tile tile = level.getTile(0, 0);
+        assertEquals(0, (int)tile.getXIndex());
+        assertEquals(0, (int)tile.getYIndex());
+    }
+
+    @Test
+    public void testGetWidth() {
+        Level level = new Level(10, 10, 10);
+        assertEquals(10, (int)level.getWidth());
+    }
+
+    @Test
+    public void testGetHeight() {
+        Level level = new Level(10, 10, 10);
+        assertEquals(10, (int)level.getHeight());
+    }
+
+    @Test
+    public void testGetTileAbove() {
+        Level level = new Level(10, 10, 10);
+        Tile tile = level.getTile(0, 0);
+        Tile tileAbove = level.getTileAbove(tile);
+        assertNotNull(tileAbove);
+    }
+
+    @Test
+    public void testGetTileBelow() {
+        Level level = new Level(10, 10, 10);
+        Tile tile = level.getTile(0, 0);
+        Tile tileBelow = level.getTileBelow(tile);
+        assertNull(tileBelow);
+    }
+
+    @Test
+    public void testGetTileLeft() {
+        Level level = new Level(10, 10, 10);
+        Tile tile = level.getTile(0, 0);
+        Tile tileLeft = level.getTileLeft(tile);
+        assertNull(tileLeft);
+    }
+
+    @Test
+    public void testGetTileRight() {
+        Level level = new Level(10, 10, 10);
+        Tile tile = level.getTile(0, 0);
+        Tile tileRight = level.getTileRight(tile);
+        assertNotNull(tileRight);
+    }
+
+    @Test
+    public void testIsLeftTurn() {
+        Level level = new Level(10, 10, 10);
+        Tile tile = level.getTile(0, 0);
+        Boolean isLeftTurn = level.isLeftTurn(tile);
+        assertFalse(isLeftTurn);
+    }
+
+    @Test
+    public void testIsRightTurn() {
+        Level level = new Level(10, 10, 10);
+        Tile tile = level.getTile(0, 0);
+        Boolean isRightTurn = level.isRightTurn(tile);
+        assertFalse(isRightTurn);
+    }
+
+    @Test
+    public void testPlaceTower() {
+        Level level = new Level(10, 10, 10);
+        Tile tile = level.getTile(0, 0);
+        level.placeTower(tile);
+        TowerManager towerManager = level.getTowerManager();
+        Tower tower = towerManager.getTowerAtTile(tile);
+        assertNotNull(tower);
+    }
+
+    @Test
+    public void testGetTowerManager() {
+        Level level = new Level(10, 10, 10);
+        TowerManager towerManager = level.getTowerManager();
+        assertNotNull(towerManager);
+    }
+
+    @Test
+    public void testResetLevel() {
+        Level level = new Level(10, 10, 10);
+        level.resetLevel();
+        Level level2 = new Level(10, 10, 10);
+        assertNotEquals(level, level2);
+    }
+
+    @Test
+    public void testGetNumEnemies() {
+        Level level = new Level(10, 10, 10);
+        assertEquals(10, (int)level.getNumEnemies());
+    }
+
+    @Test
+    public void testGetEnemies() {
+        Level level = new Level(10, 10, 10);
+        List<Enemy> enemies = level.getEnemies();
+        assertEquals(0, enemies.size());
+    }
+
+    @Test
+    public void testSetFirstTile() {
+        Level level = new Level(10, 10, 10);
+        Tile tile = level.getTile(0, 0);
+        level.setFirstTile(tile);
+        assertEquals(tile, level.getTile(0, 0));
+    }
+
+    @Test
+    public void testSetLastTile() {
+        Level level = new Level(10, 10, 10);
+        Tile tile = level.getTile(9, 9);
+        level.setLastTile(tile);
+        assertEquals(tile, level.getTile(9, 9));
+    }
+
+
+    @Test
+    public void testGenerateLevel() {
+        Level level = new Level(10, 10, 10);
+        Level spyLevel = spy(level);
+        doNothing().when(spyLevel).spawnEnemies();
+        spyLevel.generateLevel();
+        verify(spyLevel, times(1)).spawnEnemies();
+    }
+
+    @Test
+    public void testCopyPathFinder() {
+        Level level = new Level(10, 10, 10);
+        PathFinder pathFinder = level.copyPathFinder();
+        assertNotNull(pathFinder);
+    }
+
+
+}
+
+// test the following methods (or most of them):
+/*
+*
 public class Level {
     private Tile[][] tiles;
     private Tile firstTile;
@@ -219,7 +383,7 @@ public class Level {
         }
     }
 
-    PathFinder copyPathFinder() {
+    private PathFinder copyPathFinder() {
         return new PathFinder(this);
     }
 
@@ -241,5 +405,6 @@ public class Level {
     public void resetLevel() {
         instance = null;
     }
-
 }
+*
+* */

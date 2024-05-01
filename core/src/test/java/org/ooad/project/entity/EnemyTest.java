@@ -1,4 +1,4 @@
-package org.ooad.project;
+package org.ooad.project.entity;
 
 import org.junit.Test;
 import org.ooad.project.entity.Enemy;
@@ -24,5 +24,21 @@ public class EnemyTest {
 
         enemy.setDirection(Enemy.Direction.LEFT);
         assertEquals(Enemy.Direction.LEFT, enemy.getDirection());
+    }
+
+    @Test
+    public void testSpeedMultiplier() {
+        PathFinder mockPathFinder = mock(PathFinder.class);
+        Enemy enemy = new Enemy(0.0f, 0.0f, mockPathFinder);
+
+        assertEquals(10.0f, enemy.getSpeedMultiplier(), 0.01);
+    }
+
+    @Test
+    public void testGetPathFinder() {
+        PathFinder mockPathFinder = mock(PathFinder.class);
+        Enemy enemy = new Enemy(0.0f, 0.0f, mockPathFinder);
+
+        assertEquals(mockPathFinder, enemy.getPathFinder());
     }
 }
