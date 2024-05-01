@@ -13,7 +13,6 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
 public class TestRunner extends BlockJUnit4ClassRunner implements ApplicationListener {
-
     public TestRunner(Class<?> klass) throws InitializationError {
         super(klass);
         HeadlessNativesLoader.load();

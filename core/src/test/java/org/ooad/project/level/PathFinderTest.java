@@ -8,6 +8,16 @@ import org.ooad.project.level.Tile;
 import static org.mockito.Mockito.*;
 
 public class PathFinderTest {
+
+    /* * *
+
+    BDD for PathFinding
+    Scenario: Find a valid path through the level
+    Given: A level filled completely with tiles, where there is a valid path (entry and exit point connected)
+    When: The Level is created
+    Then: The PathFinder should be invoked and return an Array of coordinates called PivotPoints where the Enemy will turn
+
+    * * */
     @Test
     public void testFindPath() {
         Level mockLevel = mock(Level.class);

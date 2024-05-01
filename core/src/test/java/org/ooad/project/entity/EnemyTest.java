@@ -11,6 +11,23 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class EnemyTest {
+
+    /* * *
+
+    BDD for Enemy Rendering
+    Scenario: Properly render an Enemy to the Screen
+    Given: A valid Enemy object whose position is within the level bounds
+    When: The game is played and all entities/items/background is rendered to the screen
+    Then: Each enemy should be visually represented by the correct texture, at the correct animation frame
+
+    BDD for Enemy Movement
+    Scenario: Properly move an enemy along the path in the Level
+    Given: A level with a valid path
+    When: As time passes and additional frames are rendered
+    Then: The enemy's animation should progress and the position should move gradually towards the path end
+
+    * * */
+
     @Mock
     MovementStrategy mockMovementStrategy = mock(DefaultMovementStrategy.class);
 
