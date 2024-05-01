@@ -27,14 +27,6 @@ public class Enemy {
         this.direction = Direction.RIGHT;
     }
 
-    public Boolean isDead() {
-        return isDead;
-    }
-
-    public Double getHealth() {
-        return health;
-    }
-
     public Float getX() {
         return x;
     }

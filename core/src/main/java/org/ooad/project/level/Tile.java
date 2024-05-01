@@ -42,24 +42,13 @@ public class Tile {
         this.isWalkable = isWalkable;
     }
 
-    public Tile getNextTile() {
-        return nextTile;
-    }
-
     public void setNextTile(Tile nextTile) {
         this.nextTile = nextTile;
     }
 
-    public Boolean isFirstTile() {
-        return isFirstTile;
-    }
 
     public void setFirstTile(Boolean isFirstTile) {
         this.isFirstTile = isFirstTile;
-    }
-
-    public Boolean isLastTile() {
-        return isLastTile;
     }
 
     public void setLastTile(Boolean isLastTile) {
@@ -98,30 +87,8 @@ public class Tile {
         this.yIndex = yIndex;
     }
 
-    public void setHeight(Float height) {
-        this.height = height;
-    }
-
-    public void setWidth(Float width) {
-        this.width = width;
-    }
-
-
-    public Float getCenterX() {
-        return (float) (xCoordinate + width / 2);
-    }
-
-    public Float getCenterY() {
-        return (float) (yCoordinate + height / 2);
-    }
-
     public void setPreviousTile(Tile previousTile) {
         this.previousTile = previousTile;
     }
-
-    public Tile getPreviousTile() {
-        return previousTile;
-    }
-
 
 }

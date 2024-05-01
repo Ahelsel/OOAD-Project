@@ -95,20 +95,12 @@ public class Level {
         return tiles[i][j];
     }
 
-
-    public Tile getFirstTile() {
-        return firstTile;
-    }
-
     public Integer getWidth() {
         return width;
     }
 
     public List<Enemy> getEnemies() {
         return enemies;
-    }
-    public void removeEnemy(Enemy enemy) {
-        enemies.remove(enemy);
     }
 
     public Integer getHeight() {
@@ -121,10 +113,6 @@ public class Level {
 
     public void setLastTile(Tile lastTile) {
         this.lastTile = lastTile;
-    }
-
-    public Tile getTileAtCoordinates(Float x, Float y) {
-        return tiles[(int)(x/50)][(int)(y/50)];
     }
 
     public Tile getTileAbove(Tile tile) {
