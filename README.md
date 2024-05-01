@@ -1,7 +1,5 @@
 # Semester Project - CSCI 4448 Object Oriented Analysis and Design
 
-TODO: Update READme
-
 ## Team Members
 - Anthony Helsel
 - Jesus Carnero
@@ -17,39 +15,42 @@ The main code for the project is located in the 'core/src' directory.
 #### Game
 This class represents the Game itself and is where everything is initialized and ran
 
+#### StartScreen
+This screen is rendered when the application is first started. It has a button for Play and Quit that are clickable and either start the game or exit the application
+
+#### PauseScreen
+When inside the game, pressing esc will bring this screen up that gives you the option to leave or resume the game
+(Pressing esc while in this menu will resume the game)
+
 #### GameScreen
-This class will represent the screen that the game is played on and what is displayed to the user (i.e if there needs to be a pause menu or ammo count, it will be displayed here)
-Attributes:
-- Game: game
+This Screen contains everything relevant to the game. Including towers, enemies, textures for the paths/background. 
+In this class, we call the render functions and progress the game, which calls the helper render functions for each aspect of the game.
+
 
 #### Level
-The Level holds information about the Tiles and the Enemies
-Attributes:
-- Tile[][]: tiles
-- Enemy[]: enemies
+The Level holds information about the Tiles, Enemies, and Towers. 
 
 #### Tile
 This class represents 50x50 pixel tiles that make up the level
 A tile can be walkable or not walkable; if it is not walkable, the player or enemy cannot move through it
 Towers cannot be placed on non-walkable tiles
-Attributes:
-- Boolean: isWalkable
 
 #### PathFinder
+The PathFinder is called when the Level is created and stores PivotPoints
+
+#### PivotPoints
+The PivotPoints are the coordinates where the enemy should turn.
 
 #### Enemy
 This class represents the enemies (for now, just one enemy type)
-Attributes:
-- Integer: health
-- Integer: speed
 
 #### Tower
+Represents the tower objects. Each keeps track of its coordinates and any enemy within its range. If there is an enemy in the range,
+there will be a target enemy stored in the Tower (until it leaves).
 
-#### Projectile
+#### Projectile (Not implemented)
 If a weapon is a ranged weapon, it will have a projectile represented by this class
 Attributes:
-- Boolean: modifier (if the projectile has a special effect) (Stretch Goal)
-- Modifier: modifierType (if the projectile has a special effect) (Stretch Goal)
 
 ## Running the Project
 In order to build and test the project in a Desktop environment, you will need to use the LibGDX-provided 'desktop' module.
@@ -57,7 +58,7 @@ To do this, run the 'DesktopLauncher' class located in the 'desktop/src/org/ooad
 
 
 
-## Milestones to be Completed
+## Milestones to be Completed (from Checkpoint)
 
 ### Fundamental Mechanics
 - Implement player movement (WASD or Arrow Keys)
@@ -82,16 +83,7 @@ To do this, run the 'DesktopLauncher' class located in the 'desktop/src/org/ooad
 - Add an Enemy sprite with movement (change Sprite based on direction)
 - Add a Weapon sprite for the Player
 - Add a Projectile sprite for the Player's Weapon
-- Add a HomeBase sprite
 - Add a level sprite 
-
-## Stretch Goals/Milestones
-
-### Audio
-Audio for firing weapons, being hit by an enemy, or dying. Background music for the game. 
-
-### Weapon Modifiers
-Add modifiers to the weapons that can be applied to the projectiles. These modifiers can be things like poison, fire, or ice.
 
 ## External Libraries
 - LibGDX
