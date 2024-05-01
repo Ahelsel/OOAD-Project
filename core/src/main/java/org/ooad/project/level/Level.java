@@ -1,9 +1,13 @@
 package org.ooad.project.level;
 
 import com.badlogic.gdx.utils.Timer;
+import jdk.internal.icu.util.CodePointTrie;
 import org.ooad.project.entity.Enemy;
 import org.ooad.project.items.Tower;
 import org.ooad.project.items.TowerManager;
+import org.ooad.project.movement.DefaultMovementStrategy;
+import org.ooad.project.movement.FastMovementStrategy;
+import org.ooad.project.movement.MovementStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,8 +81,14 @@ public class Level {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
+                Float startX = 0.0f;
+                Float startY = (width/2)*50.0f;
                 if (numEnemies > 0) {
-                    enemies.add(new Enemy(0.0f, (width/2)*50.0f, copyPathFinder()));
+                    if (numEnemies % 2 == 0) {
+                        enemies.add(new Enemy(startX, startY, copyPathFinder(), new FastMovementStrategy()));
+                    } else {
+                        enemies.add(new Enemy(startX, startY, copyPathFinder(), new DefaultMovementStrategy()));
+                    }
                     numEnemies--;
                 } else {
                     cancel();
