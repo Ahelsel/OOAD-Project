@@ -40,7 +40,7 @@ public class Tower implements Observer {
         }
     }
 
-    private boolean isEnemyInTowerRange(Enemy enemy) {
+    boolean isEnemyInTowerRange(Enemy enemy) {
         float towerX = getTile().getXIndex();
         float towerY = getTile().getYIndex();
         float enemyX = enemy.getX() / 50f;
