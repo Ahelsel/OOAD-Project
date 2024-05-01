@@ -26,4 +26,13 @@ public class TileTest {
         assertEquals(10.0, tile.getXCoordinate(), 0.01);
         assertEquals(20.0, tile.getYCoordinate(), 0.01);
     }
+
+    @Test
+    public void testIsFirstTile() {
+        Tile tile = new Tile(true);
+        assertFalse(tile.isFirstTile());
+
+        tile.setFirstTile(true);
+        assertTrue(tile.isFirstTile());
+    }
 }

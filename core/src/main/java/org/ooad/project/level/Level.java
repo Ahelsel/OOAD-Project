@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Timer;
 import jdk.internal.icu.util.CodePointTrie;
 import org.ooad.project.entity.Enemy;
 import org.ooad.project.items.Tower;
+import org.ooad.project.items.TowerFactory;
 import org.ooad.project.items.TowerManager;
 import org.ooad.project.movement.DefaultMovementStrategy;
 import org.ooad.project.movement.FastMovementStrategy;
@@ -237,9 +238,10 @@ public class Level {
         return numEnemies;
     }
 
-    public void placeTower(Tile tile) {
+    public void placeTower(Tile tile, String TowerType) {
         if (!tile.isWalkable() && towerManager.getTowerAtTile(tile) == null) {
-            Tower tower = new Tower(tile);
+            TowerFactory towerFactory = new TowerFactory();
+            Tower tower = towerFactory.createTower(TowerType, tile);
             towerManager.addTower(tower);
         }
     }

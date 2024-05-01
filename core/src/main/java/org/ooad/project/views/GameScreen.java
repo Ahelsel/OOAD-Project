@@ -48,8 +48,8 @@ public class GameScreen implements Screen {
         enemyRenderer = new EnemyRenderer(level);
         guiRenderer   = new GuiRenderer(level);
 
-        level.placeTower(level.getTile(2, (level.getHeight()/2) + 1));
-        level.placeTower(level.getTile(6, (level.getHeight()/2) - 2));
+        level.placeTower(level.getTile(2, (level.getHeight()/2) + 1), "Basic");
+        level.placeTower(level.getTile(6, (level.getHeight()/2) - 2), "Basic");
     }
 
     @Override

@@ -99,7 +99,7 @@ public class LevelTest {
     public void testPlaceTower() {
         Level level = new Level(10, 10, 10);
         Tile tile = level.getTile(0, 0);
-        level.placeTower(tile);
+        level.placeTower(tile, "Basic");
         TowerManager towerManager = level.getTowerManager();
         Tower tower = towerManager.getTowerAtTile(tile);
         assertNotNull(tower);
