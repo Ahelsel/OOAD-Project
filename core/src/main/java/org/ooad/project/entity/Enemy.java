@@ -1,11 +1,13 @@
 package org.ooad.project.entity;
 
 import org.ooad.project.level.PathFinder;
+import org.ooad.project.level.PivotPoint;
 import org.ooad.project.movement.MovementStrategy;
 import org.ooad.project.observer.Observable;
 import org.ooad.project.observer.Observer;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Enemy implements Observable {
@@ -46,7 +48,16 @@ public class Enemy implements Observable {
         return y;
     }
 
-    public void move(Float deltaX, Float deltaY) {
+    public void move() {
+        Float deltaX = 0.0f;
+        Float deltaY = 0.0f;
+        if (getDirection() == Direction.DOWN) {
+            deltaY = (-10.0f / 60.0f) * getSpeedMultiplier();
+        } else if (getDirection() == Direction.UP) {
+            deltaY = (10.0f / 60.0f) * getSpeedMultiplier();
+        } else if (getDirection() == Direction.RIGHT) {
+            deltaX = (10.0f / 60.0f) * getSpeedMultiplier();
+        }
         movementStrategy.move(this, deltaX, deltaY);
         notifyObservers();
     }
@@ -97,6 +108,37 @@ public class Enemy implements Observable {
     public void notifyObservers() {
         for (Observer observer : observers) {
             observer.update(this);
+        }
+    }
+
+    public void findDirection() {
+        Iterator<PivotPoint> iterator = getPathFinder().getPivotPoints().iterator();
+        Float proximity = 5.0f;
+
+        while (iterator.hasNext()) {
+            PivotPoint pivot = iterator.next();
+            if (Math.abs(getX() - pivot.getX()) <= proximity && Math.abs(getY() - pivot.getY()) <= proximity) {
+                switch (pivot.getDirection()) {
+                    case LEFT:
+                        if (getDirection() == Enemy.Direction.DOWN) {
+                            setDirection(Enemy.Direction.RIGHT);
+                        } else {
+                            setDirection(Enemy.Direction.UP);
+                        }
+                        break;
+                    case RIGHT:
+                        if (getDirection() == Enemy.Direction.UP) {
+                            setDirection(Enemy.Direction.RIGHT);
+                        } else {
+                            setDirection(Enemy.Direction.DOWN);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                iterator.remove();
+                break;
+            }
         }
     }
 

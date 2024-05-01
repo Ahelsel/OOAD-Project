@@ -45,4 +45,29 @@ public class TowerTest {
 
         assertEquals(mockEnemy, tower.getTarget());
     }
+
+    @Test
+    public void testUpdate() {
+        Tile mockTile = mock(Tile.class);
+        Enemy mockEnemy = mock(Enemy.class);
+        Tower tower = new Tower(mockTile);
+
+        tower.update(mockEnemy);
+
+        assertEquals(mockEnemy, tower.getTarget());
+    }
+
+    @Test
+    public void testIsEnemyInTowerRange() {
+        Tile mockTile = mock(Tile.class);
+        Enemy mockEnemy = mock(Enemy.class);
+        Tower tower = new Tower(mockTile);
+
+        when(mockTile.getXIndex()).thenReturn(0);
+        when(mockTile.getYIndex()).thenReturn(0);
+        when(mockEnemy.getX()).thenReturn(0.0f);
+        when(mockEnemy.getY()).thenReturn(0.0f);
+
+        assertTrue(tower.isEnemyInTowerRange(mockEnemy));
+    }
 }

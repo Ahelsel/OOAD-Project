@@ -31,8 +31,8 @@ public class EnemyRenderer {
         Iterator<Enemy> iterator = level.getEnemies().iterator();
         while (iterator.hasNext()) {
             Enemy enemy = iterator.next();
-            updateEnemyPosition(enemy);
-            findDirection(enemy);
+            enemy.move();
+            enemy.findDirection();
             TextureRegion currentFrame = entityAnimation.getKeyFrame(animationTime, true);
             TextureRegion rotatedFrame = new TextureRegion(currentFrame);
             if (enemy.getDirection() == Enemy.Direction.UP) {
@@ -49,37 +49,6 @@ public class EnemyRenderer {
             }
         }
         batch.end();
-    }
-
-    public void findDirection(Enemy enemy) {
-        Iterator<PivotPoint> iterator = enemy.getPathFinder().getPivotPoints().iterator();
-        Float proximity = 5.0f;
-
-        while (iterator.hasNext()) {
-            PivotPoint pivot = iterator.next();
-            if (Math.abs(enemy.getX() - pivot.getX()) <= proximity && Math.abs(enemy.getY() - pivot.getY()) <= proximity) {
-                switch (pivot.getDirection()) {
-                    case LEFT:
-                        if (enemy.getDirection() == Enemy.Direction.DOWN) {
-                            enemy.setDirection(Enemy.Direction.RIGHT);
-                        } else {
-                            enemy.setDirection(Enemy.Direction.UP);
-                        }
-                        break;
-                    case RIGHT:
-                        if (enemy.getDirection() == Enemy.Direction.UP) {
-                            enemy.setDirection(Enemy.Direction.RIGHT);
-                        } else {
-                            enemy.setDirection(Enemy.Direction.DOWN);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                iterator.remove();
-                break;
-            }
-        }
     }
 
     public void dispose() {
@@ -99,19 +68,6 @@ public class EnemyRenderer {
             frames.add(new TextureRegion(frameTexture));
         }
         entityAnimation = new Animation<>(0.1f, frames);
-    }
-
-    public void updateEnemyPosition(Enemy enemy) {
-        Float deltaX = 0.0f;
-        Float deltaY = 0.0f;
-        if (enemy.getDirection() == Enemy.Direction.DOWN) {
-            deltaY = (-10.0f / 60.0f) * enemy.getSpeedMultiplier();
-        } else if (enemy.getDirection() == Enemy.Direction.UP) {
-            deltaY = (10.0f / 60.0f) * enemy.getSpeedMultiplier();
-        } else if (enemy.getDirection() == Enemy.Direction.RIGHT) {
-            deltaX = (10.0f / 60.0f) * enemy.getSpeedMultiplier();
-        }
-        enemy.move(deltaX, deltaY);
     }
 
 }
