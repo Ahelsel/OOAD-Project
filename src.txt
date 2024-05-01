@@ -1,0 +1,1149 @@
+// File: /Game.java
+
+public class Game extends com.badlogic.gdx.Game {
+	private Screen startScreen;
+
+	@Override
+	public void create() {
+		startScreen = new StartScreen(this);
+		setScreen(startScreen);
+	}
+
+	@Override
+	public void dispose() {
+		startScreen.dispose();
+	}
+
+}
+// File: /entity/Enemy.java
+
+public class Enemy {
+    public enum Direction {
+        UP,
+        DOWN,
+        RIGHT,
+        LEFT
+    }
+    private Direction direction;
+    private Float speedMultiplier = 10.0f;
+    private Double health;
+    private Boolean isDead;
+    private PathFinder pathFinder;
+    private Float x = 0.0f;
+    private Float y = 0.0f;
+
+    public Enemy(Float x, Float y, PathFinder pathFinder) {
+        this.health = 100.0;
+        this.isDead = false;
+        this.pathFinder = pathFinder;
+        this.x = x;
+        this.y = y;
+
+        this.direction = Direction.RIGHT;
+    }
+
+    public Boolean isDead() {
+        return isDead;
+    }
+
+    public Double getHealth() {
+        return health;
+    }
+
+    public Float getX() {
+        return x;
+    }
+
+    public Float getY() {
+        return y;
+    }
+
+    public void move(Float deltaX, Float deltaY) {
+        this.x += deltaX;
+        this.y += deltaY;
+    }
+
+    public PathFinder getPathFinder() {
+        return pathFinder;
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
+    public Float getSpeedMultiplier() {
+        return speedMultiplier;
+    }
+
+}
+// File: /level/Tile.java
+
+public class Tile {
+
+    private Boolean isWalkable;
+    private Tile nextTile;
+    private Tile previousTile;
+    private Boolean isFirstTile;
+    private Boolean isLastTile;
+
+    private Double xCoordinate;
+    private Double yCoordinate;
+    private Integer xIndex;
+    private Integer yIndex;
+
+    private Float height;
+    private Float width;
+
+    public Tile(boolean isWalkable) {
+        this.isWalkable = isWalkable;
+
+        this.isFirstTile = false;
+        this.isLastTile = false;
+        this.nextTile = null;
+
+        this.xCoordinate = 0.0;
+        this.yCoordinate = 0.0;
+        this.xIndex = 0;
+        this.yIndex = 0;
+
+        this.height = 50.0f;
+        this.width = 50.0f;
+    }
+
+    public Boolean isWalkable() {
+        return isWalkable;
+    }
+
+    public void setWalkable(Boolean isWalkable) {
+        this.isWalkable = isWalkable;
+    }
+
+    public Tile getNextTile() {
+        return nextTile;
+    }
+
+    public void setNextTile(Tile nextTile) {
+        this.nextTile = nextTile;
+    }
+
+    public Boolean isFirstTile() {
+        return isFirstTile;
+    }
+
+    public void setFirstTile(Boolean isFirstTile) {
+        this.isFirstTile = isFirstTile;
+    }
+
+    public Boolean isLastTile() {
+        return isLastTile;
+    }
+
+    public void setLastTile(Boolean isLastTile) {
+        this.isLastTile = isLastTile;
+    }
+
+    public Double getXCoordinate() {
+        return xCoordinate;
+    }
+
+    public Double getYCoordinate() {
+        return yCoordinate;
+    }
+
+    public Integer getXIndex() {
+        return xIndex;
+    }
+
+    public Integer getYIndex() {
+        return yIndex;
+    }
+
+    public void setXCoordinate(Double xCoordinate) {
+        this.xCoordinate = xCoordinate;
+    }
+
+    public void setYCoordinate(Double yCoordinate) {
+        this.yCoordinate = yCoordinate;
+    }
+
+    public void setXIndex(Integer xIndex) {
+        this.xIndex = xIndex;
+    }
+
+    public void setYIndex(Integer yIndex) {
+        this.yIndex = yIndex;
+    }
+
+    public void setHeight(Float height) {
+        this.height = height;
+    }
+
+    public void setWidth(Float width) {
+        this.width = width;
+    }
+
+    public Float getCenterX() {
+        return (float) (xCoordinate + width / 2);
+    }
+
+    public Float getCenterY() {
+        return (float) (yCoordinate + height / 2);
+    }
+
+    public void setPreviousTile(Tile previousTile) {
+        this.previousTile = previousTile;
+    }
+
+    public Tile getPreviousTile() {
+        return previousTile;
+    }
+
+}
+// File: /level/PathFinder.java
+
+public class PathFinder {
+    Level level;
+    private Array<PivotPoint> pivotPoints;
+
+    public PathFinder(Level level) {
+        this.level = level;
+        this.pivotPoints = new Array<PivotPoint>();
+        findPath();
+    }
+
+    public void findPath() {
+        Tile[][] tiles = level.getTiles();
+        for (int i = 0; i < level.getWidth(); i++) {
+            for (int j = 0; j < level.getHeight(); j++) {
+                Tile currentTile = tiles[i][j];
+                if (level.isLeftTurn(currentTile)) {
+                    pivotPoints.add(new PivotPoint(currentTile.getXCoordinate().floatValue(),
+                            currentTile.getYCoordinate().floatValue(), Enemy.Direction.LEFT));
+                } else if (level.isRightTurn(currentTile)) {
+                    pivotPoints.add(new PivotPoint(currentTile.getXCoordinate().floatValue(),
+                            currentTile.getYCoordinate().floatValue(), Enemy.Direction.RIGHT));
+                }
+            }
+        }
+    }
+
+    public Array<PivotPoint> getPivotPoints() {
+        return pivotPoints;
+    }
+
+}
+// File: /level/PivotPoint.java
+
+public class PivotPoint {
+    private Float x;
+    private Float y;
+    private Enemy.Direction direction;
+
+    public PivotPoint(Float x, Float y, Enemy.Direction direction) {
+        this.x = x;
+        this.y = y;
+        this.direction = direction;
+    }
+
+    public Float getX() {
+        return x;
+    }
+
+    public Float getY() {
+        return y;
+    }
+
+    public Enemy.Direction getDirection() {
+        return direction;
+    }
+
+}
+// File: /level/Level.java
+
+public class Level {
+    private Tile[][] tiles;
+    private Tile firstTile;
+    private Tile lastTile;
+    private Boolean generated = false;
+
+    private static Level instance = null;
+
+    private Integer width;
+    private Integer height;
+    PathFinder pathFinder;
+    private Integer numEnemies;
+    private List<Enemy> enemies;
+
+    private TowerManager towerManager;
+
+    public static Level getInstance(Integer width, Integer height, Integer numEnemies) {
+        if (instance == null) {
+            instance = new Level(width, height, numEnemies);
+        }
+        if (!instance.generated) {
+            instance.generateLevel();
+            instance.generated = true;
+        }
+        return instance;
+    }
+
+    public Level(Integer width, Integer height, Integer numEnemies) {
+        this.width = width;
+        this.height = height;
+        this.enemies = new ArrayList<>();
+
+        tiles = new Tile[width][height];
+
+        for (int i = 0; i < width; i++){
+            for (int j = 0; j < height; j++) {
+                    Tile temp = new Tile(false);
+                    if (i == 0 && j == 0) {
+                        temp.setFirstTile(true);
+                        firstTile = temp;
+                    } else if (i == width - 1 && j == height - 1) {
+                        temp.setLastTile(true);
+                        lastTile = temp;
+                    }
+
+                    temp.setXIndex(i);
+                    temp.setYIndex(j);
+                    temp.setXCoordinate(i * 50.0);
+                    temp.setYCoordinate(j * 50.0);
+
+                    tiles[i][j] = temp;
+            }
+        }
+
+        towerManager = new TowerManager(this);
+
+        this.numEnemies = numEnemies;
+        buildLevel();
+    }
+
+    public void generateLevel() {
+        pathFinder = new PathFinder(this);
+        spawnEnemies();
+    }
+
+    public void spawnEnemies() {
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                if (numEnemies > 0) {
+                    enemies.add(new Enemy(0.0f, (width/2)*50.0f, copyPathFinder()));
+                    numEnemies--;
+                } else {
+                    cancel();
+                }
+            }
+        }, 0, 2);
+    }
+
+    public Tile[][] getTiles() {
+        return tiles;
+    }
+
+    public Tile getTile(int i, int j) {
+        return tiles[i][j];
+    }
+
+    public Tile getFirstTile() {
+        return firstTile;
+    }
+
+    public Integer getWidth() {
+        return width;
+    }
+
+    public List<Enemy> getEnemies() {
+        return enemies;
+    }
+    public void removeEnemy(Enemy enemy) {
+        enemies.remove(enemy);
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setFirstTile(Tile firstTile) {
+        this.firstTile = firstTile;
+    }
+
+    public void setLastTile(Tile lastTile) {
+        this.lastTile = lastTile;
+    }
+
+    public Tile getTileAtCoordinates(Float x, Float y) {
+        return tiles[(int)(x/50)][(int)(y/50)];
+    }
+
+    public Tile getTileAbove(Tile tile) {
+        int x = tile.getXIndex();
+        int y = tile.getYIndex() + 1; // Tile above
+        if (y >= height) return null; // Check boundary
+        return tiles[x][y];
+    }
+
+    public Tile getTileBelow(Tile tile) {
+        int x = tile.getXIndex();
+        int y = tile.getYIndex() - 1; // Tile below
+        if (y < 0) return null; // Check boundary
+        return tiles[x][y];
+    }
+
+    public Tile getTileLeft(Tile tile) {
+        int x = tile.getXIndex() - 1; // Tile to the left
+        int y = tile.getYIndex();
+        if (x < 0) return null; // Check boundary
+        return tiles[x][y];
+    }
+
+    public Tile getTileRight(Tile tile) {
+        int x = tile.getXIndex() + 1; // Tile to the right
+        int y = tile.getYIndex();
+        if (x >= width) return null; // Check boundary
+        return tiles[x][y];
+    }
+
+    public Boolean isLeftTurn(Tile tile) {
+        Tile tileAbove = getTileAbove(tile);
+        Tile tileLeft = getTileLeft(tile);
+        Tile tileRight = getTileRight(tile);
+
+        // Only proceed if all required tiles are non-null and walkable
+        if (tileAbove != null && ((tileLeft != null && tileLeft.isWalkable() && tileAbove.isWalkable()) ||
+                (tileRight != null && tileRight.isWalkable() && tileAbove.isWalkable()))) {
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean isRightTurn(Tile tile) {
+        Tile tileBelow = getTileBelow(tile);
+        Tile tileLeft = getTileLeft(tile);
+        Tile tileRight = getTileRight(tile);
+
+        // Only proceed if all required tiles are non-null and walkable
+        if (tileBelow != null && ((tileLeft != null && tileLeft.isWalkable() && tileBelow.isWalkable()) ||
+                (tileRight != null && tileRight.isWalkable() && tileBelow.isWalkable()))) {
+            return true;
+        }
+        return false;
+    }
+
+    private void buildLevel() {
+        Tile previousTile = null;
+        for (Float i = 0.0f; i < width; i+=1.0f) {
+            for (Float j = 0.0f; j < height; j+=1.0f) {
+                Tile tile = this.getTile(i.intValue(), j.intValue());
+                if (previousTile != null) {
+                    previousTile.setNextTile(tile);
+                }
+                tile.setPreviousTile(previousTile);
+                assignTiles(tile, i.intValue(), j.intValue());
+                previousTile = tile;
+            }
+        }
+    }
+
+    public void assignTiles(Tile tile, Integer i, Integer j) {
+        if (i == 0.0f && j == 0.0f) {
+            tile.setFirstTile(true);
+            this.setFirstTile(tile);
+        } else if (i == width - 1 && j == height - 1) {
+            tile.setLastTile(true);
+            this.setLastTile(tile);
+        }
+        // straight line of walkable tiles from left to right in middle
+        if (j == height/2) {
+            if (i <= 2) {
+                tile.setWalkable(true);
+            }
+        }
+        if (i == 3) {
+            if (j == height / 2 || j == height/2 + 1 || j == height/2 + 2 || j == height/2 + 3) {
+                tile.setWalkable(true);
+            }
+        }
+        if (i == 4 && j == height/2 + 3) {
+            tile.setWalkable(true);
+        }
+        if (i == 5) {
+            // if j is between gameHeight / 2 + 2 and gameHeight / 2 - 3), setWalkable(true)
+            Integer topBound = height/2 + 3;
+            Integer bottomBound = height/2 - 3;
+            if (j >= bottomBound && j <= topBound) {
+                tile.setWalkable(true);
+            }
+        }
+        if (i > 5 && j == height/2 - 3) {
+            tile.setWalkable(true);
+        }
+    }
+
+    private PathFinder copyPathFinder() {
+        return new PathFinder(this);
+    }
+
+    public Integer getNumEnemies() {
+        return numEnemies;
+    }
+
+    public void placeTower(Tile tile) {
+        if (!tile.isWalkable() && towerManager.getTowerAtTile(tile) == null) {
+            Tower tower = new Tower(tile);
+            towerManager.addTower(tower);
+        }
+    }
+
+    public TowerManager getTowerManager() {
+        return towerManager;
+    }
+
+    public void resetLevel() {
+        instance = null;
+    }
+}
+// File: /items/Tower.java
+
+public class Tower {
+    Tile tile;
+    private Enemy target;
+
+    public Tower(Tile tile) {
+        this.tile = tile;
+        this.target = null;
+    }
+
+    public Tower() {
+        this.tile = null;
+        this.target = null;
+    }
+    public void setTile(Tile tile) {
+        this.tile = tile;
+    }
+    public Tile getTile() {
+        return tile;
+    }
+
+    public Enemy getTarget() {
+        return target;
+    }
+
+    public void setTarget(Enemy target) {
+        this.target = target;
+    }
+}
+// File: /items/TowerManager.java
+
+public class TowerManager {
+    private Level level;
+    private List<Tower> towers;
+
+    public TowerManager(Level level) {
+        this.level = level;
+        this.towers = new ArrayList<Tower>();
+    }
+
+    public void addTower(Tower tower) {
+        towers.add(tower);
+    }
+
+    public void removeTower(Tower tower) {
+        towers.remove(tower);
+    }
+
+    public List<Tower> getTowers() {
+        return towers;
+    }
+
+    public Tower getTowerAtTile(Tile tile) {
+        for (Tower tower : towers) {
+            if (tower.getTile().equals(tile)) {
+                return tower;
+            }
+        }
+        return null;
+    }
+
+}
+// File: /items/Projectile.java
+
+public class Projectile {
+}
+// File: /graphics/TowerRenderer.java
+
+public class TowerRenderer {
+    private Level level;
+    private SpriteBatch batch;
+    private TextureRegion towerTexture;
+    private TextureRegion baseTexture;
+
+    public TowerRenderer(Level level) {
+        this.level = level;
+        this.batch = new SpriteBatch();
+        this.towerTexture = new TextureRegion (new Texture(Gdx.files.internal("towers/Cannon.png")));
+        this.baseTexture = new TextureRegion (new Texture(Gdx.files.internal("towers/Tower.png")));
+    }
+
+    public void render() {
+        batch.begin();
+        for (Tower tower : level.getTowerManager().getTowers()) {
+            float towerX = tower.getTile().getXCoordinate().floatValue() + 5;
+            float towerY = tower.getTile().getYCoordinate().floatValue() + 5;
+
+            batch.draw(baseTexture, towerX, towerY, 20, 20, 40, 40, 1f, 1f, 0f);
+
+            float towerRotation = 0;
+            if (tower.getTarget() != null) {
+                float enemyX = tower.getTarget().getX() + 25;
+                float enemyY = tower.getTarget().getY() + 25;
+                towerRotation = (float) Math.toDegrees(Math.atan2(enemyY - (towerY + 20), enemyX - (towerX + 20))) - 90;
+            }
+
+            batch.draw(towerTexture, towerX + 5, towerY + 5, 15, 15, 30, 30, 1f, 1f, towerRotation);
+        }
+        batch.end();
+    }
+
+    public void dispose() {
+        batch.dispose();
+        towerTexture.getTexture().dispose();
+        baseTexture.getTexture().dispose();
+    }
+}
+// File: /graphics/GuiRenderer.java
+
+public class GuiRenderer {
+    private BitmapFont font;
+    private SpriteBatch batch;
+    private ShapeRenderer shapeRenderer;
+    private Level level;
+
+    public GuiRenderer(Level level) {
+        font = new BitmapFont();
+        batch = new SpriteBatch();
+        this.level = level;
+        shapeRenderer = new ShapeRenderer();
+    }
+
+    public void renderEnemiesRemaining() {
+        batch.begin();
+        font.draw(batch, "Enemies remaining: " + level.getNumEnemies(), 10, level.getHeight() * 50 - 10);
+        batch.end();
+    }
+
+    public void renderGameOver(float alpha) {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(0, 0, 0, alpha);
+        shapeRenderer.rect(0, 0, level.getWidth() * 50, level.getHeight() * 50);
+        shapeRenderer.end();
+
+        batch.begin();
+        font.setColor(1, 1, 1, alpha);
+        font.draw(batch, "Game Over", level.getWidth() * 25 - 50, level.getHeight() * 25);
+        batch.end();
+    }
+
+    public void dispose() {
+        font.dispose();
+        batch.dispose();
+    }
+
+}
+// File: /graphics/LevelRenderer.java
+
+public class LevelRenderer {
+    private Level level;
+    private SpriteBatch batch;
+    private Texture grassTexture;
+    private Texture pathTexture;
+
+    public LevelRenderer(Level level ) {
+        this.level = level;
+        this.batch = new SpriteBatch();
+        this.pathTexture = new Texture(Gdx.files.internal("path.png"));
+        this.grassTexture = new Texture(Gdx.files.internal("grass.png"));
+    }
+
+    public void render() {
+        batch.begin();
+        for (Float i = 0f; i < level.getWidth(); i++) {
+            for (Float j = 0f; j < level.getHeight(); j++) {
+                Tile tile = level.getTile(i.intValue(), j.intValue());
+                if (tile.isWalkable()) {
+                    batch.draw(pathTexture, i*50, j*50, 50, 50);
+                } else {
+                    batch.draw(grassTexture, i*50, j*50, 50, 50);
+                }
+            }
+        }
+        batch.end();
+    }
+
+    public void dispose() {
+        this.pathTexture.dispose();
+        this.grassTexture.dispose();
+    }
+
+}
+// File: /graphics/EnemyRenderer.java
+
+public class EnemyRenderer {
+    private Level level;
+    private SpriteBatch batch;
+    private Animation<TextureRegion> entityAnimation;
+    private Array<Texture> textures;
+
+    public EnemyRenderer(Level level) {
+        textures = new Array<>();
+        this.level = level;
+        this.batch = new SpriteBatch();
+        loadEntityAnimation();
+    }
+
+    public void render(Float animationTime) {
+        batch.begin();
+        Iterator<Enemy> iterator = level.getEnemies().iterator();
+        while (iterator.hasNext()) {
+            Enemy enemy = iterator.next();
+            updateEnemyPosition(enemy);
+            findDirection(enemy);
+            TextureRegion currentFrame = entityAnimation.getKeyFrame(animationTime, true);
+            TextureRegion rotatedFrame = new TextureRegion(currentFrame);
+            if (enemy.getDirection() == Enemy.Direction.UP) {
+                rotatedFrame.setRegion(currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionHeight(), currentFrame.getRegionWidth());
+                batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 25, 25, 50, 50, 1f, 1f, 90f);
+            } else if (enemy.getDirection() == Enemy.Direction.DOWN) {
+                rotatedFrame.setRegion(currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionHeight(), currentFrame.getRegionWidth());
+                batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 25, 25, 50, 50, 1f, 1f, 270f);
+            } else {
+                batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 50, 50);
+            }
+            updateTowerTargets(enemy);
+            if (enemy.getX() > level.getWidth() * 50 || enemy.getY() > level.getHeight() * 50) {
+                iterator.remove();
+            }
+        }
+        batch.end();
+    }
+
+    private void updateTowerTargets(Enemy enemy) {
+        for (Tower tower : level.getTowerManager().getTowers()) {
+            if (isEnemyInTowerRadius(tower, enemy)) {
+                if (tower.getTarget() == null) {
+                    tower.setTarget(enemy);
+                }
+            } else if (tower.getTarget() == enemy) {
+                tower.setTarget(null);
+            }
+        }
+    }
+
+    private boolean isEnemyInTowerRadius(Tower tower, Enemy enemy) {
+        float towerX = tower.getTile().getXIndex();
+        float towerY = tower.getTile().getYIndex();
+        float enemyX = enemy.getX() / 50f;
+        float enemyY = enemy.getY() / 50f;
+
+        Boolean returnValue = Math.abs(towerX - enemyX) <= 1 && Math.abs(towerY - enemyY) <= 1;
+
+        return Math.abs(towerX - enemyX) <= 1.5f && Math.abs(towerY - enemyY) <= 1.5f;
+    }
+
+    public void findDirection(Enemy enemy) {
+        Iterator<PivotPoint> iterator = enemy.getPathFinder().getPivotPoints().iterator();
+        Float proximity = 5.0f;
+
+        while (iterator.hasNext()) {
+            PivotPoint pivot = iterator.next();
+            if (Math.abs(enemy.getX() - pivot.getX()) <= proximity && Math.abs(enemy.getY() - pivot.getY()) <= proximity) {
+                switch (pivot.getDirection()) {
+                    case LEFT:
+                        if (enemy.getDirection() == Enemy.Direction.DOWN) {
+                            enemy.setDirection(Enemy.Direction.RIGHT);
+                        } else {
+                            enemy.setDirection(Enemy.Direction.UP);
+                        }
+                        break;
+                    case RIGHT:
+                        if (enemy.getDirection() == Enemy.Direction.UP) {
+                            enemy.setDirection(Enemy.Direction.RIGHT);
+                        } else {
+                            enemy.setDirection(Enemy.Direction.DOWN);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                iterator.remove();
+                break;
+            }
+        }
+    }
+
+    public void dispose() {
+        batch.dispose();
+        for (Texture texture : textures) {
+            texture.dispose();
+        }
+    }
+
+    private void loadEntityAnimation() {
+        Array<TextureRegion> frames = new Array<>();
+        for (int i = 0; i < 17; i++) {
+            String filename = "entityMove/move" + i + ".png";
+            Texture texture = new Texture(Gdx.files.internal(filename));
+            textures.add(texture);
+            TextureRegion frameTexture = new TextureRegion(texture);
+            frames.add(new TextureRegion(frameTexture));
+        }
+        entityAnimation = new Animation<>(0.1f, frames);
+    }
+
+    public void updateEnemyPosition(Enemy enemy) {
+        Float deltaX = 0.0f;
+        Float deltaY = 0.0f;
+        if (enemy.getDirection() == Enemy.Direction.DOWN) {
+            deltaY = (-10.0f / 60.0f) * enemy.getSpeedMultiplier();
+        } else if (enemy.getDirection() == Enemy.Direction.UP) {
+            deltaY = (10.0f / 60.0f) * enemy.getSpeedMultiplier();
+        } else if (enemy.getDirection() == Enemy.Direction.RIGHT) {
+            deltaX = (10.0f / 60.0f) * enemy.getSpeedMultiplier();
+        }
+        enemy.move(deltaX, deltaY);
+    }
+
+}// File: /views/GameScreen.java
+
+public class GameScreen implements Screen {
+    private Integer gameWidth = 9;
+    private Integer gameHeight = 9;
+    private LevelRenderer levelRenderer;
+    private TowerRenderer towerRenderer;
+    private EnemyRenderer enemyRenderer;
+    private GuiRenderer guiRenderer;
+    private Boolean isPaused;
+    private Level level;
+    private boolean gameOver;
+    private float gameOverTime;
+    private float animationTime = 0f;
+
+    private final Game game;
+
+    public GameScreen(Game game) {
+        this.game = game;
+        isPaused = false;
+
+        gameOver = false;
+        gameOverTime = 0;
+
+        gameWidth = 9;
+        gameHeight = 9;
+
+        level = Level.getInstance(gameWidth, gameHeight, 5);
+
+        levelRenderer = new LevelRenderer(level);
+        towerRenderer = new TowerRenderer(level);
+        enemyRenderer = new EnemyRenderer(level);
+        guiRenderer   = new GuiRenderer(level);
+
+        level.placeTower(level.getTile(2, (level.getHeight()/2) + 1));
+        level.placeTower(level.getTile(6, (level.getHeight()/2) - 2));
+    }
+
+    @Override
+    public void render(float v) {
+        if (!isPaused) {
+            animationTime += v;
+
+            ScreenUtils.clear(Color.BLACK);
+
+            levelRenderer.render();
+            towerRenderer.render();
+            enemyRenderer.render(animationTime);
+            // @TODO: render projectiles
+            guiRenderer.renderEnemiesRemaining();
+
+            if (level.getNumEnemies() == 0 && level.getEnemies().isEmpty() && !gameOver) {
+                gameOver = true;
+                gameOverTime = animationTime;
+            }
+
+            if (gameOver) {
+                float alpha = Math.min(1, (animationTime - gameOverTime) / 4);
+                if (animationTime - gameOverTime > 3) {
+                    resetGame();
+                    getGame().setScreen(new StartScreen(game));
+                    dispose();
+                } else {
+                    guiRenderer.renderGameOver(alpha);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void show() {
+        Gdx.input.setInputProcessor(new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+                if (keycode == Input.Keys.ESCAPE) {
+                    if (!isPaused) {
+                        pause();
+                        setIsPaused(true);
+                    }
+                }
+                return true;
+            }
+        });
+    }
+
+    public void setIsPaused(Boolean isPaused) {
+        this.isPaused = isPaused;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    @Override
+    public void pause() {
+        game.setScreen(new PauseScreen(this));
+    }
+
+    @Override
+    public void resume() {
+        game.setScreen(this);
+    }
+
+    @Override
+    public void hide() {
+        // @TODO: hide game
+    }
+
+    @Override
+    public void resize(int i, int i1) {
+        // @TODO: resize game
+    }
+
+    @Override
+    public void dispose() {
+        levelRenderer.dispose();
+        towerRenderer.dispose();
+        enemyRenderer.dispose();
+        guiRenderer.dispose();
+    }
+
+    public Level getLevel() {
+        return level;
+    }
+
+    public void resetGame() {
+        level.resetLevel();
+        level = Level.getInstance(gameWidth, gameHeight, 5);
+        levelRenderer = new LevelRenderer(level);
+        towerRenderer = new TowerRenderer(level);
+        enemyRenderer = new EnemyRenderer(level);
+        guiRenderer   = new GuiRenderer(level);
+        isPaused = false;
+        gameOver = false;
+        gameOverTime = 0f;
+        animationTime = 0f;
+    }
+
+}
+// File: /views/StartScreen.java
+
+public class StartScreen implements Screen {
+    private SpriteBatch batch;
+    private Texture startButtonTexture;
+    private Texture exitButtonTexture;
+    private Texture backgroundTexture;
+    private Rectangle startButtonBounds;
+    private Rectangle exitButtonBounds;
+    private Texture logoTexture;
+    private Rectangle logoBounds;
+    private final Game game;
+    public StartScreen(Game game) {
+        this.game = game;
+        batch = new SpriteBatch();
+        logoTexture = new Texture("logo.png");
+        startButtonTexture = new Texture("buttons/PlayButton.png");
+        exitButtonTexture = new Texture("buttons/QuitButton.png");
+        backgroundTexture = new Texture("grass.png");
+        // start button should be in the center of the screen, but shifted down a bit
+        logoBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 200, Gdx.graphics.getHeight() / 2 - 175, 400, 400);
+        startButtonBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 200, Gdx.graphics.getHeight() / 2 - 150, 200, 100);
+        exitButtonBounds  = new Rectangle(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 150, 200, 100);
+    }
+    @Override
+    public void show() {
+    }
+
+    @Override
+    public void render(float delta) {
+        ScreenUtils.clear(Color.WHITE);
+
+        batch.begin();
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                batch.draw(backgroundTexture, i * 50, j * 50, 50, 50);
+            }
+        }
+
+        batch.draw(logoTexture, logoBounds.x, logoBounds.y, logoBounds.width, logoBounds.height);
+        batch.draw(startButtonTexture, startButtonBounds.x, startButtonBounds.y, startButtonBounds.width, startButtonBounds.height);
+        batch.draw(exitButtonTexture, exitButtonBounds.x, exitButtonBounds.y, exitButtonBounds.width, exitButtonBounds.height);
+        batch.end();
+
+        if (Gdx.input.justTouched()) {
+            Vector2 touchPoint = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+            touchPoint.set(touchPoint.x, Gdx.graphics.getHeight() - touchPoint.y);
+
+            if (startButtonBounds.contains(touchPoint)) {
+                game.setScreen(new GameScreen(game));
+                dispose();
+            }
+
+            if (exitButtonBounds.contains(touchPoint)) {
+                Gdx.app.exit();
+            }
+        }
+    }
+
+    @Override
+    public void resize(int i, int i1) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void dispose() {
+        batch.dispose();
+        startButtonTexture.dispose();
+    }
+}
+// File: /views/PauseScreen.java
+
+public class PauseScreen implements Screen {
+    private final GameScreen gameScreen;
+    private final SpriteBatch batch;
+    private final BitmapFont font;
+    private Texture exitButtonTexture;
+    private Texture playButtonTexture;
+    private Texture grassTexture;
+    private Texture pathTexture;
+
+    private final Rectangle resumeButtonBounds;
+    private final Rectangle exitToMenuButtonBounds;
+
+    public PauseScreen(GameScreen gameScreen) {
+        this.gameScreen = gameScreen;
+        batch = new SpriteBatch();
+        font = new BitmapFont();
+        resumeButtonBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 2, 200, 100);
+        exitToMenuButtonBounds = new Rectangle(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 2 - 100, 200, 100);
+        playButtonTexture = new Texture("buttons/PlayButton.png");
+        exitButtonTexture = new Texture("buttons/QuitButton.png");
+        grassTexture = new Texture("grass.png");
+        pathTexture = new Texture("path.png");
+    }
+
+    @Override
+    public void show() {
+        Gdx.input.setInputProcessor(new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+                if (keycode == Input.Keys.ESCAPE) {
+                    gameScreen.resume();
+                    gameScreen.setIsPaused(false);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                Vector2 touchPoint = new Vector2(screenX, screenY);
+                touchPoint.set(touchPoint.x, Gdx.graphics.getHeight() - touchPoint.y);
+
+                if (resumeButtonBounds.contains(touchPoint)) {
+                    gameScreen.resume();
+                    gameScreen.setIsPaused(false);
+                } else if (exitToMenuButtonBounds.contains(touchPoint)) {
+                    gameScreen.resetGame();
+                    gameScreen.getGame().setScreen(new StartScreen(gameScreen.getGame()));
+                    dispose();
+
+                }
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public void render(float delta) {
+        ScreenUtils.clear(0, 0, 0, 0.5f);
+
+        batch.begin();
+        // iterate over level and draw grass or path depending on if tile is walkable or not
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (gameScreen.getLevel().getTile(i, j).isWalkable()) {
+                    batch.draw(pathTexture, i * 50, j * 50, 50, 50);
+                } else {
+                    batch.draw(grassTexture, i * 50, j * 50, 50, 50);
+                }
+            }
+        }
+
+        batch.draw(playButtonTexture, resumeButtonBounds.x, resumeButtonBounds.y, resumeButtonBounds.width, resumeButtonBounds.height);
+        batch.draw(exitButtonTexture, exitToMenuButtonBounds.x, exitToMenuButtonBounds.y, exitToMenuButtonBounds.width, exitToMenuButtonBounds.height);
+        batch.end();
+    }
+
+    @Override
+    public void resize(int i, int i1) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void dispose() {
+        batch.dispose();
+        font.dispose();
+    }
+}

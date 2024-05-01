@@ -2,7 +2,6 @@ package org.ooad.project;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import org.ooad.project.Game;
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 public class DesktopLauncher {
@@ -16,8 +15,12 @@ public class DesktopLauncher {
 		config.setWindowedMode(50*9, 50*9);
 		config.setResizable(false);
 
+<<<<<<< HEAD
 		Game gameInstance = new Game();
 		new Lwjgl3Application(gameInstance, config);
 		gameInstance.setScreen(new GameScreen(gameInstance)); // Pass the Game instance to GameScreen
+=======
+		new Lwjgl3Application(new Game(), config);
+>>>>>>> ah
 	}
 }

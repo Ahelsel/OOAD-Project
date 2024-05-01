@@ -9,7 +9,7 @@ buildscript {
         google()
     }
     dependencies {
-        
+
 
     }
 }
@@ -42,7 +42,6 @@ allprojects {
 project(":desktop") {
     apply plugin: "java-library"
 
-
     dependencies {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
@@ -53,10 +52,39 @@ project(":desktop") {
 
 project(":core") {
     apply plugin: "java-library"
-
+    apply plugin: "jacoco"
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
-        
+        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        testImplementation files(rootProject.file('assets').path)
+        // mockito
+        testImplementation 'org.mockito:mockito-core:3.12.4'
     }
+
+    sourceSets {
+        main {
+            java {
+                srcDirs = ['src/main/java']
+            }
+        }
+        test {
+            java {
+                srcDirs = ['src/test/java']
+            }
+        }
+    }
+
+    jacocoTestReport {
+        reports {
+            //xml.enabled = true
+            //csv.enabled = false
+        }
+    }
+
+    test {
+        useJUnit()
+        finalizedBy jacocoTestReport
+    }
+
 }
