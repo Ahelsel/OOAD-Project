@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import org.ooad.project.entity.Enemy;
 import org.ooad.project.items.Tower;
 import org.ooad.project.level.Level;
 
@@ -29,10 +30,17 @@ public class TowerRenderer {
 
             batch.draw(baseTexture, towerX, towerY, 20, 20, 40, 40, 1f, 1f, 0f);
 
+//            float towerRotation = 0;
+//            if (tower.getTarget() != null) {
+//                float enemyX = tower.getTarget().getX() + 25;
+//                float enemyY = tower.getTarget().getY() + 25;
+//                towerRotation = (float) Math.toDegrees(Math.atan2(enemyY - (towerY + 20), enemyX - (towerX + 20))) - 90;
+//            }
             float towerRotation = 0;
+            Enemy target = tower.getTarget();
             if (tower.getTarget() != null) {
-                float enemyX = tower.getTarget().getX() + 25;
-                float enemyY = tower.getTarget().getY() + 25;
+                float enemyX = target.getX() + 25;
+                float enemyY = target.getY() + 25;
                 towerRotation = (float) Math.toDegrees(Math.atan2(enemyY - (towerY + 20), enemyX - (towerX + 20))) - 90;
             }
 

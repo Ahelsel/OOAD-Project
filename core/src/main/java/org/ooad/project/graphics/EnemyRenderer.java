@@ -44,35 +44,11 @@ public class EnemyRenderer {
             } else {
                 batch.draw(rotatedFrame, enemy.getX(), enemy.getY(), 50, 50);
             }
-            updateTowerTargets(enemy);
             if (enemy.getX() > level.getWidth() * 50 || enemy.getY() > level.getHeight() * 50) {
                 iterator.remove();
             }
         }
         batch.end();
-    }
-
-    private void updateTowerTargets(Enemy enemy) {
-        for (Tower tower : level.getTowerManager().getTowers()) {
-            if (isEnemyInTowerRadius(tower, enemy)) {
-                if (tower.getTarget() == null) {
-                    tower.setTarget(enemy);
-                }
-            } else if (tower.getTarget() == enemy) {
-                tower.setTarget(null);
-            }
-        }
-    }
-
-    private boolean isEnemyInTowerRadius(Tower tower, Enemy enemy) {
-        float towerX = tower.getTile().getXIndex();
-        float towerY = tower.getTile().getYIndex();
-        float enemyX = enemy.getX() / 50f;
-        float enemyY = enemy.getY() / 50f;
-
-        Boolean returnValue = Math.abs(towerX - enemyX) <= 1 && Math.abs(towerY - enemyY) <= 1;
-
-        return Math.abs(towerX - enemyX) <= 1.5f && Math.abs(towerY - enemyY) <= 1.5f;
     }
 
     public void findDirection(Enemy enemy) {

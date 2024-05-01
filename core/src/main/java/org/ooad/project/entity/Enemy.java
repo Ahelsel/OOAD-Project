@@ -2,9 +2,16 @@ package org.ooad.project.entity;
 
 import org.ooad.project.level.PathFinder;
 import org.ooad.project.movement.MovementStrategy;
+import org.ooad.project.observer.Observable;
+import org.ooad.project.observer.Observer;
 
-public class Enemy {
+import java.util.ArrayList;
+import java.util.List;
+
+public class Enemy implements Observable {
     private MovementStrategy movementStrategy;
+    List<Observer> observers;
+
     public enum Direction {
         UP,
         DOWN,
@@ -26,6 +33,7 @@ public class Enemy {
         this.x = x;
         this.y = y;
 
+        this.observers = new ArrayList<>();
         this.movementStrategy = movementStrategy;
         this.direction = Direction.RIGHT;
     }
@@ -40,6 +48,7 @@ public class Enemy {
 
     public void move(Float deltaX, Float deltaY) {
         movementStrategy.move(this, deltaX, deltaY);
+        notifyObservers();
     }
 
     public PathFinder getPathFinder() {
@@ -72,6 +81,23 @@ public class Enemy {
 
     public MovementStrategy getMovementStrategy() {
         return movementStrategy;
+    }
+
+    @Override
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update(this);
+        }
     }
 
 }

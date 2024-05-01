@@ -85,11 +85,16 @@ public class Level {
                 Float startX = 0.0f;
                 Float startY = (width/2)*50.0f;
                 if (numEnemies > 0) {
+                    Enemy enemy;
                     if (numEnemies % 2 == 0) {
-                        enemies.add(new Enemy(startX, startY, copyPathFinder(), new FastMovementStrategy()));
+                        enemy = new Enemy(startX, startY, copyPathFinder(), new FastMovementStrategy());
                     } else {
-                        enemies.add(new Enemy(startX, startY, copyPathFinder(), new DefaultMovementStrategy()));
+                        enemy = new Enemy(startX, startY, copyPathFinder(), new DefaultMovementStrategy());
                     }
+                    for (Tower tower : towerManager.getTowers()) {
+                        enemy.addObserver(tower);
+                    }
+                    enemies.add(enemy);
                     numEnemies--;
                 } else {
                     cancel();
